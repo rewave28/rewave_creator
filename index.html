@@ -2,12 +2,16 @@
 <html lang="ru" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supercell Creator Vault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d0a1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Rewave Vault" />
+  <title>Rewave • Supercell Creator Vault</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -15,123 +19,213 @@
         extend: {
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            surface: '#0b0f19',
-            card: '#131926',
-            cardHover: '#1a2234',
-            accent: '#3b82f6',
+            void: '#090712',
+            surface: '#110d22',
+            card: '#16112b',
+            cardHover: '#1d1738',
+            neonGreen: '#34d399',
+            creatorGold: '#fbbf24',
           }
         }
       }
     }
   </script>
   <style>
-    body { background-color: #0b0f19; color: #f1f5f9; }
+    body {
+      background-color: #090712;
+      color: #f3f0ff;
+      background-image:
+        radial-gradient(circle at 18% 0%, rgba(124, 58, 237, 0.24) 0%, transparent 45%),
+        radial-gradient(circle at 85% 8%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 50% 100%, rgba(88, 28, 135, 0.2) 0%, transparent 55%);
+      background-attachment: fixed;
+    }
+    .cosmic-banner {
+      background: linear-gradient(135deg, #1b1038 0%, #271452 45%, #122238 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .cosmic-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.65), transparent),
+        radial-gradient(1px 1px at 90px 70px, rgba(255,255,255,0.45), transparent),
+        radial-gradient(2px 2px at 170px 25px, rgba(250,204,21,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 260px 80px, rgba(52,211,153,0.6), transparent),
+        radial-gradient(1px 1px at 340px 40px, rgba(255,255,255,0.5), transparent);
+      background-size: 380px 110px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #0b0f19; }
-    ::-webkit-scrollbar-thumb { background: #263147; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #374663; }
+    ::-webkit-scrollbar-track { background: #090712; }
+    ::-webkit-scrollbar-thumb { background: #2e2354; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #43337a; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-blue-500/30 selection:text-blue-200">
+<body class="min-h-screen flex flex-col selection:bg-purple-500/35 selection:text-purple-100 relative overflow-x-hidden">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-[#0b0f19]/90 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+  <!-- Decorative Floating Watermark Pins -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden z-0 opacity-[0.06]">
+    <div id="bgPinLeft" class="w-64 h-64 -left-12 top-36 fixed -rotate-12"></div>
+    <div id="bgPinRight" class="w-72 h-72 -right-14 bottom-16 fixed rotate-12"></div>
+  </div>
+
+  <!-- Top Creator Bar & Header -->
+  <header class="sticky top-0 z-30 border-b border-purple-900/50 bg-[#0d091d]/90 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand + Avatar + Nickname -->
       <div class="flex items-center gap-3 min-w-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-          </svg>
-        </div>
-        <div class="truncate">
-          <div class="flex items-center gap-2">
-            <span class="font-extrabold tracking-tight text-base sm:text-lg text-white truncate">CREATOR VAULT</span>
-            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">SUPERCELL</span>
+        <div id="headerLogoPin" class="w-11 h-11 rounded-2xl bg-[#191233] border border-purple-500/40 p-1 shadow-lg shadow-purple-950/60 shrink-0 flex items-center justify-center"></div>
+
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-black tracking-tight text-base sm:text-lg bg-gradient-to-r from-white via-purple-100 to-emerald-300 bg-clip-text text-transparent">
+              CREATOR VAULT
+            </span>
+            <button id="copyCreatorTagBtn" type="button" title="Скопировать ник rewave"
+              class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-400/20 to-emerald-400/20 text-amber-300 border border-amber-400/40 hover:border-amber-300 transition">
+              <span>@rewave</span>
+              <svg class="w-3 h-3 opacity-80" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
           </div>
-          <div id="syncStatus" class="flex items-center gap-1.5 text-xs text-slate-400">
+
+          <div id="syncStatus" class="flex items-center gap-1.5 text-xs text-purple-300/70 mt-0.5">
             <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span id="syncText">Вход не выполнен</span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
-        <button id="openCategoriesBtn" class="px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700/70 transition flex items-center gap-1.5">
-          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <!-- Social Links + Actions -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Social Pills -->
+        <div class="flex items-center gap-1.5 bg-[#150f2e] border border-purple-800/50 rounded-xl p-1">
+          <a href="https://t.me/rewave_bs" target="_blank" rel="noopener noreferrer" title="Telegram: @rewave_bs"
+            class="px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 text-xs font-semibold flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            <span class="hidden sm:inline">TG</span>
+          </a>
+
+          <a href="https://www.tiktok.com/@rewave_bs" target="_blank" rel="noopener noreferrer" title="TikTok: @rewave_bs"
+            class="px-2.5 py-1.5 rounded-lg bg-pink-500/15 hover:bg-pink-500/30 text-pink-300 text-xs font-semibold flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            <span class="hidden sm:inline">TT</span>
+          </a>
+
+          <a href="https://youtube.com/@rewave_bs" target="_blank" rel="noopener noreferrer" title="YouTube: @rewave_bs"
+            class="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span class="hidden sm:inline">YT</span>
+          </a>
+        </div>
+
+        <button id="openCategoriesBtn" class="px-3 py-2 rounded-xl bg-[#181233] hover:bg-[#231b47] text-purple-100 text-xs sm:text-sm font-medium border border-purple-800/60 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
           </svg>
-          <span class="hidden sm:inline">Категории</span>
+          <span class="hidden md:inline">Категории</span>
         </button>
 
-        <button id="openAddBtn" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/25 transition flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+        <button id="openAddBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs sm:text-sm font-extrabold shadow-lg shadow-emerald-500/25 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          <span>Добавить ваучер</span>
+          <span>Добавить пак</span>
         </button>
 
-        <div id="authArea">
-          <button id="googleLoginBtn" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-semibold transition flex items-center gap-2">
-            <svg class="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.54-1.14 2.85-2.4 3.72v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.22z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/>
-            </svg>
-            <span class="hidden md:inline">Войти с Google</span>
-          </button>
-        </div>
+        <div id="authArea"></div>
       </div>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- Cosmic Creator Banner -->
+    <section class="cosmic-banner rounded-3xl border border-purple-700/40 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xl shadow-purple-950/40">
+      <div class="flex items-center gap-3.5 relative z-10">
+        <div id="bannerAvatarPin" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#130d29]/90 border-2 border-emerald-400/50 p-1.5 shrink-0 shadow-lg"></div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 rounded-md text-[11px] font-extrabold uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+              Supercell Creator Inventory
+            </span>
+            <span class="text-xs text-purple-200/80 font-medium">rewave_bs</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-extrabold text-white mt-1">Хранилище наград и ваучеров</h1>
+          <p class="text-xs text-purple-200/75 mt-0.5">Вставляй таблицы из Supercell Creators целиком — ссылки, название и срок подтянутся сами.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 relative z-10 self-end sm:self-center">
+        <button id="quickPasteTableBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-extrabold shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <span>Вставить таблицу ссылок</span>
+        </button>
+      </div>
+    </section>
 
     <!-- Stats Grid -->
     <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+      <div class="bg-card/95 border border-purple-900/50 rounded-2xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-xs text-slate-400 font-medium">Всего ваучеров</p>
-          <p id="statTotal" class="text-2xl font-bold text-white mt-1">0</p>
+          <p class="text-xs text-purple-300/70 font-medium">Всего ссылок</p>
+          <p id="statTotalLinks" class="text-2xl font-extrabold text-white mt-1">0</p>
+          <p id="statPacksSub" class="text-[11px] text-purple-300/50 mt-0.5">в 0 наборах</p>
         </div>
-        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center text-purple-300">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
           </svg>
         </div>
       </div>
 
-      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+      <div class="bg-card/95 border border-purple-900/50 rounded-2xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-xs text-slate-400 font-medium">Активные</p>
-          <p id="statActive" class="text-2xl font-bold text-emerald-400 mt-1">0</p>
+          <p class="text-xs text-purple-300/70 font-medium">Свободные ссылки</p>
+          <p id="statFreeLinks" class="text-2xl font-extrabold text-emerald-400 mt-1">0</p>
+          <p class="text-[11px] text-emerald-300/60 mt-0.5">готовы к выдаче</p>
         </div>
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
       </div>
 
-      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+      <div class="bg-card/95 border border-purple-900/50 rounded-2xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-xs text-slate-400 font-medium">Отданные</p>
-          <p id="statGiven" class="text-2xl font-bold text-purple-400 mt-1">0</p>
+          <p class="text-xs text-purple-300/70 font-medium">Уже отдано</p>
+          <p id="statClaimedLinks" class="text-2xl font-extrabold text-purple-300 mt-1">0</p>
+          <p class="text-[11px] text-purple-300/50 mt-0.5">активировано / выдано</p>
         </div>
-        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+        <div class="w-10 h-10 rounded-xl bg-fuchsia-500/15 border border-fuchsia-500/25 flex items-center justify-center text-fuchsia-300">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
           </svg>
         </div>
       </div>
 
-      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+      <div class="bg-card/95 border border-purple-900/50 rounded-2xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-xs text-slate-400 font-medium">Скоро сгорят (&lt;3 дн.)</p>
-          <p id="statExpiring" class="text-2xl font-bold text-amber-400 mt-1">0</p>
+          <p class="text-xs text-purple-300/70 font-medium">Скоро сгорят (&lt;3 дн.)</p>
+          <p id="statExpiring" class="text-2xl font-extrabold text-amber-400 mt-1">0</p>
+          <p class="text-[11px] text-amber-300/60 mt-0.5">наборов с остатком</p>
         </div>
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center text-amber-400">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
@@ -140,176 +234,192 @@
     </section>
 
     <!-- Filters & Search -->
-    <section class="bg-card border border-slate-800/80 rounded-2xl p-4 space-y-3">
+    <section class="bg-card/95 border border-purple-900/50 rounded-2xl p-4 space-y-3">
       <div class="relative">
-        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-purple-300/60 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <input id="searchInput" type="text" placeholder="Поиск по названию, заметке (кому отдал) или ссылке..."
-          class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition" />
+        <input id="searchInput" type="text" placeholder="Поиск по названию скина, заметке (кому отдал) или ссылке..."
+          class="w-full bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-purple-300/40 outline-none transition" />
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <select id="filterGame" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+        <select id="filterGame" class="bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3.5 py-2 text-sm text-purple-100 outline-none">
           <option value="ALL">Все игры</option>
         </select>
 
-        <select id="filterType" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+        <select id="filterType" class="bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3.5 py-2 text-sm text-purple-100 outline-none">
           <option value="ALL">Все типы наград</option>
         </select>
 
-        <select id="sortSelect" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+        <select id="sortSelect" class="bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3.5 py-2 text-sm text-purple-100 outline-none">
           <option value="expiryAsc">Сначала скоро истекающие</option>
           <option value="newest">Сначала новые</option>
-          <option value="expiryDesc">Сначала долгие</option>
+          <option value="freeDesc">Больше свободных ссылок</option>
         </select>
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
         <div id="statusTabs" class="flex flex-wrap items-center gap-1.5">
-          <button data-status="ALL" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition">Все</button>
-          <button data-status="ACTIVE" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Активные</button>
-          <button data-status="GIVEN" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Отданные</button>
-          <button data-status="EXPIRED" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Истекшие</button>
+          <button data-status="ALL" class="status-tab px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 transition">Все</button>
+          <button data-status="AVAILABLE" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#1f183d] text-purple-200 hover:bg-[#2a2152] transition">Есть свободные</button>
+          <button data-status="COMPLETED" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#1f183d] text-purple-200 hover:bg-[#2a2152] transition">Все розданы</button>
+          <button data-status="EXPIRED" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#1f183d] text-purple-200 hover:bg-[#2a2152] transition">Истекшие</button>
           <button data-status="EXPIRING" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition">🔥 Скоро сгорят</button>
         </div>
-        <span id="shownCount" class="text-xs text-slate-400">Показано: 0 из 0</span>
+        <span id="shownCount" class="text-xs text-purple-300/60">Показано: 0 из 0</span>
       </div>
     </section>
 
-    <!-- Vouchers Grid -->
-    <section id="vouchersGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></section>
+    <!-- Packs Grid -->
+    <section id="vouchersGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 items-start"></section>
 
     <!-- Empty State -->
-    <div id="emptyState" class="hidden bg-card border border-dashed border-slate-800 rounded-2xl p-10 text-center space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-slate-800/90 text-slate-400 mx-auto flex items-center justify-center">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-        </svg>
-      </div>
-      <h3 class="text-base font-semibold text-white">Ваучеров пока нет</h3>
-      <p class="text-sm text-slate-400 max-w-md mx-auto">Нажми «Добавить ваучер» или просто скопируй скриншот награды и нажми <kbd class="px-1.5 py-0.5 text-xs bg-slate-800 rounded border border-slate-700 text-slate-200">Ctrl + V</kbd> на ПК.</p>
+    <div id="emptyState" class="hidden bg-card/90 border border-dashed border-purple-800/70 rounded-3xl p-10 text-center space-y-3">
+      <div id="emptyPin" class="w-16 h-16 mx-auto"></div>
+      <h3 class="text-base font-bold text-white">Наборов ваучеров пока нет</h3>
+      <p class="text-sm text-purple-200/70 max-w-md mx-auto">
+        Нажми <span class="text-emerald-400 font-semibold">«Добавить пак»</span> или вставь скопированную таблицу прямо из портала Supercell Creators — все ссылки разложатся по полочкам.
+      </p>
     </div>
   </main>
 
-  <!-- Add / Edit Voucher Modal -->
-  <div id="voucherModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="bg-card border border-slate-800 rounded-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 my-auto shadow-2xl">
+  <!-- Add / Edit Pack Modal -->
+  <div id="voucherModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
+    <div class="bg-card border border-purple-800/70 rounded-3xl w-full max-w-2xl p-5 sm:p-6 space-y-4 my-auto shadow-2xl">
       <div class="flex items-center justify-between">
-        <h2 id="modalTitle" class="text-lg font-bold text-white">Новый ваучер</h2>
-        <button id="closeVoucherModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <div class="flex items-center gap-2.5">
+          <div id="modalPin" class="w-8 h-8"></div>
+          <h2 id="modalTitle" class="text-lg font-extrabold text-white">Новый набор ваучеров</h2>
+        </div>
+        <button id="closeVoucherModal" class="p-1.5 rounded-xl text-purple-300 hover:text-white hover:bg-purple-900/50 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <form id="voucherForm" class="space-y-3.5">
+      <form id="voucherForm" class="space-y-4">
         <input type="hidden" id="editVoucherId" />
 
-        <!-- Image Drop / Paste / Upload -->
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1.5">Фото награды (на ПК можно нажать <span class="text-blue-400 font-semibold">Ctrl + V</span>, на телефоне — выбрать файл)</label>
-          <div id="imageDropZone" class="relative border-2 border-dashed border-slate-700 hover:border-blue-500/70 rounded-xl p-3 bg-[#0b0f19] transition cursor-pointer flex flex-col items-center justify-center min-h-[140px] text-center">
-            <input id="imageFileInput" type="file" accept="image/*" class="hidden" />
-            <img id="imagePreview" src="" alt="Превью" class="hidden max-h-44 rounded-lg object-contain mb-2" />
-            <div id="imagePlaceholder" class="space-y-1 py-2">
-              <svg class="w-7 h-7 text-slate-400 mx-auto" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p class="text-xs text-slate-300 font-medium">Нажми для загрузки или вставь скриншот через Ctrl+V</p>
-              <p class="text-[11px] text-slate-500">Автоматически сожмётся для быстрой синхронизации</p>
-            </div>
-            <button type="button" id="clearImageBtn" class="hidden mt-2 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-xs font-medium">
-              Удалить фото
+        <!-- Smart Bulk Table Parser -->
+        <div class="bg-[#0e0a21] border border-amber-400/35 rounded-2xl p-3.5 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <label class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+              <span>⚡ Умная вставка из Supercell Creators (или список ссылок)</span>
+            </label>
+            <button type="button" id="parseBulkBtn" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold transition">
+              Распознать и добавить
             </button>
           </div>
+          <textarea id="bulkPasteInput" rows="3"
+            placeholder="Вставь сюда таблицу целиком (Title / Link / Is Claimable / Valid until) или просто ссылки с новой строки..."
+            class="w-full bg-[#090712] border border-purple-900/60 focus:border-amber-400 rounded-xl px-3 py-2 text-xs text-purple-100 placeholder-purple-300/35 outline-none"></textarea>
         </div>
 
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Название награды *</label>
-          <input id="voucherTitle" type="text" required placeholder="Например: Скин на Шелли / 10 Стар Дропов"
-            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Ссылка на ваучер *</label>
-          <input id="voucherUrl" type="url" required placeholder="https://link.brawlstars.com/..."
-            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Left: Image Upload / Ctrl+V -->
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Игра Supercell</label>
-            <select id="voucherGame" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-semibold text-purple-200">Фото награды (Ctrl+V или файл)</label>
+              <select id="voucherImageFit" class="bg-[#0d091d] border border-purple-900/60 rounded-lg px-2 py-0.5 text-[11px] text-purple-200 outline-none">
+                <option value="contain">Вписать целиком</option>
+                <option value="cover">Заполнить кадр</option>
+              </select>
+            </div>
+            <div id="imageDropZone" class="relative border-2 border-dashed border-purple-800/80 hover:border-emerald-400/70 rounded-2xl p-3 bg-[#0d091d] transition cursor-pointer flex flex-col items-center justify-center min-h-[168px] text-center">
+              <input id="imageFileInput" type="file" accept="image/*" class="hidden" />
+              <img id="imagePreview" src="" alt="Превью" class="hidden max-h-40 rounded-xl object-contain mb-2" />
+              <div id="imagePlaceholder" class="space-y-1.5 py-2">
+                <svg class="w-7 h-7 text-purple-300/60 mx-auto" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p class="text-xs text-purple-200 font-medium">Нажми для выбора или вставь через Ctrl+V</p>
+                <p class="text-[11px] text-purple-300/50">Автоматическое сжатие для быстрой синхронизации</p>
+              </div>
+              <button type="button" id="clearImageBtn" class="hidden mt-1 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-xs font-medium">
+                Удалить фото
+              </button>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Тип награды</label>
-            <select id="voucherType" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+
+          <!-- Right: Pack Metadata -->
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-purple-200 mb-1">Название награды *</label>
+              <input id="voucherTitle" type="text" required placeholder="Например: Mariano Kit"
+                class="w-full bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs font-semibold text-purple-200 mb-1">Игра</label>
+                <select id="voucherGame" class="w-full bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-purple-200 mb-1">Тип награды</label>
+                <select id="voucherType" class="w-full bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-purple-200 mb-1">Общий срок действия до *</label>
+              <input id="voucherExpiry" type="datetime-local" required
+                class="w-full bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Срок действия до *</label>
-            <input id="voucherExpiry" type="datetime-local" required
-              class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+        <!-- Links Builder List -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-purple-200">Ссылки в наборе (<span id="modalLinksCount">0</span>)</label>
+            <button type="button" id="addSingleLinkRowBtn" class="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-1 transition">
+              <span>+ Добавить ссылку</span>
+            </button>
           </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Статус</label>
-            <select id="voucherStatus" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none">
-              <option value="ACTIVE">Активен</option>
-              <option value="GIVEN">Отдан</option>
-            </select>
-          </div>
+
+          <div id="modalLinksList" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
         </div>
 
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Заметка (кому отдал и за что)</label>
-          <input id="voucherNote" type="text" placeholder="Например: @nickname — за конкурс в Telegram"
-            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
-        </div>
-
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" id="cancelVoucherBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition">Отмена</button>
-          <button type="submit" id="saveVoucherBtn" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Сохранить</button>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-purple-900/50">
+          <button type="button" id="cancelVoucherBtn" class="px-4 py-2 rounded-xl bg-[#1f183d] hover:bg-[#2a2152] text-purple-200 text-sm font-medium transition">Отмена</button>
+          <button type="submit" id="saveVoucherBtn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-extrabold transition">Сохранить набор</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Categories Manager Modal -->
-  <div id="categoriesModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="bg-card border border-slate-800 rounded-2xl w-full max-w-xl p-5 sm:p-6 space-y-5 my-auto shadow-2xl">
+  <div id="categoriesModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
+    <div class="bg-card border border-purple-800/70 rounded-3xl w-full max-w-xl p-5 sm:p-6 space-y-5 my-auto shadow-2xl">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold text-white">Управление категориями</h2>
-        <button id="closeCategoriesModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <h2 class="text-lg font-extrabold text-white">Управление категориями</h2>
+        <button id="closeCategoriesModal" class="p-1.5 rounded-xl text-purple-300 hover:text-white hover:bg-purple-900/50 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <!-- Games -->
       <div class="space-y-2.5">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Игры Supercell</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-purple-300/70">Игры Supercell</h3>
         <div class="flex gap-2">
           <input id="newGameInput" type="text" placeholder="Новая игра..."
-            class="flex-1 bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
-          <button id="addGameBtn" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Добавить</button>
+            class="flex-1 bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+          <button id="addGameBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-bold transition">Добавить</button>
         </div>
         <div id="gamesList" class="flex flex-wrap gap-2 pt-1"></div>
       </div>
 
-      <hr class="border-slate-800" />
+      <hr class="border-purple-900/50" />
 
-      <!-- Reward Types -->
       <div class="space-y-2.5">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Типы наград</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-purple-300/70">Типы наград</h3>
         <div class="flex gap-2">
           <input id="newTypeInput" type="text" placeholder="Новый тип награды..."
-            class="flex-1 bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
-          <button id="addTypeBtn" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Добавить</button>
+            class="flex-1 bg-[#0d091d] border border-purple-900/60 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+          <button id="addTypeBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-bold transition">Добавить</button>
         </div>
         <div id="typesList" class="flex flex-wrap gap-2 pt-1"></div>
       </div>
@@ -317,12 +427,95 @@
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm font-medium shadow-xl"></div>
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-[#1f1740] border border-emerald-400/50 text-white text-sm font-semibold shadow-2xl"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    // Custom Rewave Pins (Clean SVG without watermarks)
+    const PIN_HAPPY_SVG = `
+      <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 54C24 33 41 18 62 18C83 18 98 33 98 54V66H24V54Z" fill="#E11D8F" stroke="#090712" stroke-width="5"/>
+        <path d="M64 19L55 32L63 38L57 47" stroke="#090712" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="13" y="48" width="13" height="24" rx="5" fill="#D946EF" stroke="#090712" stroke-width="4.5"/>
+        <rect x="94" y="48" width="13" height="24" rx="5" fill="#D946EF" stroke="#090712" stroke-width="4.5"/>
+        <circle cx="20" cy="74" r="5" fill="#FACC15" stroke="#090712" stroke-width="3.5"/>
+        <circle cx="100" cy="74" r="5" fill="#FACC15" stroke="#090712" stroke-width="3.5"/>
+        <rect x="27" y="38" width="66" height="44" rx="12" fill="#1E6B52" stroke="#090712" stroke-width="5"/>
+        <path d="M40 58C43 52 49 52 52 58" stroke="#090712" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M68 58C71 52 77 52 80 58" stroke="#090712" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M54 45V51M60 44V51M66 45V51" stroke="#090712" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M22 86C22 71 39 64 60 64C81 64 98 71 98 86L88 99L77 92L66 101L55 92L44 101L33 92L24 98L22 86Z" fill="#D8B4FE" stroke="#090712" stroke-width="5" stroke-linejoin="round"/>
+        <rect x="43" y="72" width="34" height="17" rx="8.5" fill="#FFFFFF" stroke="#090712" stroke-width="4"/>
+        <path d="M53 73V88M60 73V88M67 73V88" stroke="#090712" stroke-width="3"/>
+      </svg>`;
+
+    const PIN_CHILL_SVG = `
+      <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M26 54C26 33 42 18 62 18C82 18 96 33 96 54V66H26V54Z" fill="#E11D8F" stroke="#090712" stroke-width="5"/>
+        <path d="M74 21L64 33L71 39L65 47" stroke="#090712" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="15" y="48" width="13" height="24" rx="5" fill="#D946EF" stroke="#090712" stroke-width="4.5"/>
+        <rect x="92" y="48" width="13" height="24" rx="5" fill="#D946EF" stroke="#090712" stroke-width="4.5"/>
+        <circle cx="22" cy="74" r="5" fill="#FACC15" stroke="#090712" stroke-width="3.5"/>
+        <circle cx="98" cy="74" r="5" fill="#FACC15" stroke="#090712" stroke-width="3.5"/>
+        <rect x="29" y="38" width="62" height="44" rx="12" fill="#1E6B52" stroke="#090712" stroke-width="5"/>
+        <path d="M40 57C43 62 49 62 52 57" stroke="#090712" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M68 57C71 62 77 62 80 57" stroke="#090712" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M54 45V51M60 44V51M66 45V51" stroke="#090712" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M24 86C24 71 40 64 60 64C80 64 96 71 96 86L87 99L76 92L65 101L55 92L44 101L34 92L25 98L24 86Z" fill="#D8B4FE" stroke="#090712" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M51 77C55 82 65 82 69 77" stroke="#090712" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>`;
+
+    document.getElementById("headerLogoPin").innerHTML = PIN_HAPPY_SVG;
+    document.getElementById("bannerAvatarPin").innerHTML = PIN_CHILL_SVG;
+    document.getElementById("bgPinLeft").innerHTML = PIN_HAPPY_SVG;
+    document.getElementById("bgPinRight").innerHTML = PIN_CHILL_SVG;
+    document.getElementById("emptyPin").innerHTML = PIN_CHILL_SVG;
+    document.getElementById("modalPin").innerHTML = PIN_HAPPY_SVG;
+
+    // Dynamic PWA Manifest & Apple Touch Icon so mobile home screen shortcut works cleanly
+    (function setupMobileShortcut() {
+      try {
+        const svgBlob = new Blob([PIN_HAPPY_SVG], { type: "image/svg+xml" });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#16112b";
+          ctx.fillRect(0, 0, 512, 512);
+          ctx.drawImage(img, 36, 36, 440, 440);
+          const pngDataUrl = canvas.toDataURL("image/png");
+
+          const appleIcon = document.createElement("link");
+          appleIcon.rel = "apple-touch-icon";
+          appleIcon.href = pngDataUrl;
+          document.head.appendChild(appleIcon);
+
+          const manifest = {
+            name: "Rewave Creator Vault",
+            short_name: "Rewave Vault",
+            start_url: window.location.href,
+            scope: window.location.origin + window.location.pathname,
+            display: "standalone",
+            background_color: "#090712",
+            theme_color: "#0d0a1a",
+            icons: [{ src: pngDataUrl, sizes: "512x512", type: "image/png" }]
+          };
+          const manBlob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+          const manLink = document.createElement("link");
+          manLink.rel = "manifest";
+          manLink.href = URL.createObjectURL(manBlob);
+          document.head.appendChild(manLink);
+          URL.revokeObjectURL(svgUrl);
+        };
+        img.src = svgUrl;
+      } catch (e) {}
+    })();
 
     const firebaseConfig = {
       apiKey: "AIzaSyBCyp12uB5tsMCM6UqmBwQK-vODqDB-xF0",
@@ -342,15 +535,17 @@
     const DEFAULT_GAMES = ["Brawl Stars", "Clash Royale", "Clash of Clans", "Squad Busters", "Hay Day", "Boom Beach"];
     const DEFAULT_TYPES = ["Пин", "Спрей", "Иконка", "Скин", "БП", "Стар дропы"];
 
-    const LOCAL_VOUCHERS_KEY = "sc_vault_vouchers_v1";
-    const LOCAL_CATS_KEY = "sc_vault_cats_v1";
+    const LOCAL_VOUCHERS_KEY = "sc_vault_packs_v2";
+    const LOCAL_CATS_KEY = "sc_vault_cats_v2";
 
     let currentUser = null;
-    let vouchers = [];
+    let packs = [];
     let categories = { games: [...DEFAULT_GAMES], types: [...DEFAULT_TYPES] };
     let currentStatusFilter = "ALL";
     let currentImageData = "";
-    let unsubVouchers = null;
+    let modalLinks = [];
+    let expandedPacks = new Set();
+    let unsubPacks = null;
     let unsubCats = null;
 
     // Elements
@@ -371,12 +566,13 @@
     const voucherForm = document.getElementById("voucherForm");
     const editVoucherId = document.getElementById("editVoucherId");
     const voucherTitle = document.getElementById("voucherTitle");
-    const voucherUrl = document.getElementById("voucherUrl");
     const voucherGame = document.getElementById("voucherGame");
     const voucherType = document.getElementById("voucherType");
     const voucherExpiry = document.getElementById("voucherExpiry");
-    const voucherStatus = document.getElementById("voucherStatus");
-    const voucherNote = document.getElementById("voucherNote");
+    const voucherImageFit = document.getElementById("voucherImageFit");
+    const bulkPasteInput = document.getElementById("bulkPasteInput");
+    const modalLinksList = document.getElementById("modalLinksList");
+    const modalLinksCount = document.getElementById("modalLinksCount");
 
     const imageDropZone = document.getElementById("imageDropZone");
     const imageFileInput = document.getElementById("imageFileInput");
@@ -395,13 +591,53 @@
       toast.textContent = msg;
       toast.classList.remove("hidden");
       clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => toast.classList.add("hidden"), 2500);
+      showToast._t = setTimeout(() => toast.classList.add("hidden"), 2400);
+    }
+
+    document.getElementById("copyCreatorTagBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("rewave");
+        showToast("Ник rewave скопирован");
+      } catch {}
+    });
+
+    // Normalize legacy single-link items into pack format automatically
+    function normalizePack(raw) {
+      if (Array.isArray(raw.links)) {
+        return {
+          ...raw,
+          imageFit: raw.imageFit || "contain",
+          links: raw.links.map((l, idx) => ({
+            id: l.id || `lnk_${idx}_${Math.random().toString(36).slice(2, 6)}`,
+            url: l.url || "",
+            claimed: Boolean(l.claimed),
+            note: l.note || ""
+          }))
+        };
+      }
+      return {
+        id: raw.id,
+        title: raw.title || "Награда",
+        game: raw.game || "Brawl Stars",
+        type: raw.type || "Скин",
+        expiresAt: raw.expiresAt || new Date().toISOString(),
+        image: raw.image || "",
+        imageFit: "contain",
+        links: raw.url ? [{
+          id: "lnk_0",
+          url: raw.url,
+          claimed: raw.status === "GIVEN",
+          note: raw.note || ""
+        }] : [],
+        createdAt: raw.createdAt || Date.now(),
+        updatedAt: raw.updatedAt || Date.now()
+      };
     }
 
     function loadLocalData() {
       try {
         const v = localStorage.getItem(LOCAL_VOUCHERS_KEY);
-        if (v) vouchers = JSON.parse(v);
+        if (v) packs = JSON.parse(v).map(normalizePack);
         const c = localStorage.getItem(LOCAL_CATS_KEY);
         if (c) {
           const parsed = JSON.parse(c);
@@ -415,7 +651,7 @@
 
     function saveLocalData() {
       try {
-        localStorage.setItem(LOCAL_VOUCHERS_KEY, JSON.stringify(vouchers));
+        localStorage.setItem(LOCAL_VOUCHERS_KEY, JSON.stringify(packs));
         localStorage.setItem(LOCAL_CATS_KEY, JSON.stringify(categories));
       } catch (e) {}
     }
@@ -424,8 +660,8 @@
       syncText.textContent = text;
       syncDot.className = "w-2 h-2 rounded-full " + (
         mode === "ok" ? "bg-emerald-400" :
-        mode === "sync" ? "bg-blue-400 animate-pulse" :
-        "bg-amber-400"
+        mode === "sync" ? "bg-amber-400 animate-pulse" :
+        "bg-rose-400"
       );
     }
 
@@ -433,14 +669,14 @@
       if (user) {
         authArea.innerHTML = `
           <div class="flex items-center gap-2">
-            <img src="${user.photoURL || ''}" alt="" class="w-8 h-8 rounded-full border border-slate-700 object-cover ${user.photoURL ? '' : 'hidden'}" />
-            <button id="logoutBtn" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">Выйти</button>
+            <img src="${user.photoURL || ''}" alt="" class="w-8 h-8 rounded-full border border-emerald-400/50 object-cover ${user.photoURL ? '' : 'hidden'}" />
+            <button id="logoutBtn" class="px-3 py-2 rounded-xl bg-[#181233] hover:bg-[#231b47] text-purple-200 text-xs font-semibold border border-purple-800/60 transition">Выйти</button>
           </div>
         `;
         document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
       } else {
         authArea.innerHTML = `
-          <button id="googleLoginBtn" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+          <button id="googleLoginBtn" class="px-3 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-950 text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow">
             <svg class="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.54-1.14 2.85-2.4 3.72v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.22z"/>
               <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
@@ -461,7 +697,7 @@
     }
 
     function subscribeCloud(uid) {
-      if (unsubVouchers) unsubVouchers();
+      if (unsubPacks) unsubPacks();
       if (unsubCats) unsubCats();
 
       setSyncState("sync", "Синхронизация...");
@@ -477,19 +713,19 @@
           saveLocalData();
           populateCategorySelects();
           renderCategoriesManager();
-          renderVouchers();
+          renderPacks();
         } else {
           await setDoc(catRef, categories);
         }
       });
 
       const colRef = collection(db, "users", uid, "vouchers");
-      unsubVouchers = onSnapshot(colRef, (snap) => {
-        vouchers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      unsubPacks = onSnapshot(colRef, (snap) => {
+        packs = snap.docs.map(d => normalizePack({ id: d.id, ...d.data() }));
         saveLocalData();
         setSyncState("ok", "Синхронизировано");
         updateStats();
-        renderVouchers();
+        renderPacks();
       }, () => {
         setSyncState("warn", "Ошибка облака");
       });
@@ -501,11 +737,11 @@
       if (user) {
         subscribeCloud(user.uid);
       } else {
-        if (unsubVouchers) unsubVouchers();
+        if (unsubPacks) unsubPacks();
         if (unsubCats) unsubCats();
         setSyncState("warn", "Локально (войдите для синка)");
         updateStats();
-        renderVouchers();
+        renderPacks();
       }
     });
 
@@ -532,16 +768,16 @@
 
     function renderCategoriesManager() {
       gamesList.innerHTML = categories.games.map(g => `
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-medium text-slate-200">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1f183d] border border-purple-800/60 text-xs font-semibold text-purple-100">
           ${escapeHtml(g)}
-          <button type="button" data-remove-game="${escapeHtml(g)}" class="text-slate-400 hover:text-rose-400">×</button>
+          <button type="button" data-remove-game="${escapeHtml(g)}" class="text-purple-400 hover:text-rose-400">×</button>
         </span>
       `).join("");
 
       typesList.innerHTML = categories.types.map(t => `
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-medium text-slate-200">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1f183d] border border-purple-800/60 text-xs font-semibold text-purple-100">
           ${escapeHtml(t)}
-          <button type="button" data-remove-type="${escapeHtml(t)}" class="text-slate-400 hover:text-rose-400">×</button>
+          <button type="button" data-remove-type="${escapeHtml(t)}" class="text-purple-400 hover:text-rose-400">×</button>
         </span>
       `).join("");
     }
@@ -550,7 +786,7 @@
       saveLocalData();
       populateCategorySelects();
       renderCategoriesManager();
-      renderVouchers();
+      renderPacks();
       if (currentUser) {
         await setDoc(doc(db, "users", currentUser.uid, "settings", "categories"), categories);
       }
@@ -588,16 +824,16 @@
       await saveCategories();
     });
 
-    function getEffectiveStatus(v) {
-      if (v.status === "GIVEN") return "GIVEN";
-      const exp = new Date(v.expiresAt).getTime();
-      if (isNaN(exp) || exp <= Date.now()) return "EXPIRED";
-      return "ACTIVE";
+    function isPackExpired(pack) {
+      const exp = new Date(pack.expiresAt).getTime();
+      return isNaN(exp) || exp <= Date.now();
     }
 
-    function isExpiringSoon(v) {
-      if (getEffectiveStatus(v) !== "ACTIVE") return false;
-      const diff = new Date(v.expiresAt).getTime() - Date.now();
+    function isPackExpiringSoon(pack) {
+      if (isPackExpired(pack)) return false;
+      const freeCount = pack.links.filter(l => !l.claimed).length;
+      if (freeCount === 0) return false;
+      const diff = new Date(pack.expiresAt).getTime() - Date.now();
       return diff > 0 && diff <= 3 * 24 * 60 * 60 * 1000;
     }
 
@@ -625,44 +861,68 @@
     }
 
     function updateStats() {
-      document.getElementById("statTotal").textContent = vouchers.length;
-      document.getElementById("statActive").textContent = vouchers.filter(v => getEffectiveStatus(v) === "ACTIVE").length;
-      document.getElementById("statGiven").textContent = vouchers.filter(v => getEffectiveStatus(v) === "GIVEN").length;
-      document.getElementById("statExpiring").textContent = vouchers.filter(isExpiringSoon).length;
+      let totalLinks = 0;
+      let freeLinks = 0;
+      let claimedLinks = 0;
+
+      packs.forEach(p => {
+        const total = p.links.length;
+        const claimed = p.links.filter(l => l.claimed).length;
+        totalLinks += total;
+        claimedLinks += claimed;
+        if (!isPackExpired(p)) {
+          freeLinks += (total - claimed);
+        }
+      });
+
+      document.getElementById("statTotalLinks").textContent = totalLinks;
+      document.getElementById("statPacksSub").textContent = `в ${packs.length} наборах`;
+      document.getElementById("statFreeLinks").textContent = freeLinks;
+      document.getElementById("statClaimedLinks").textContent = claimedLinks;
+      document.getElementById("statExpiring").textContent = packs.filter(isPackExpiringSoon).length;
     }
 
-    function renderVouchers() {
+    function renderPacks() {
       const q = searchInput.value.trim().toLowerCase();
       const gFilter = filterGame.value;
       const tFilter = filterType.value;
       const sortMode = sortSelect.value;
 
-      let list = vouchers.filter(v => {
-        const eff = getEffectiveStatus(v);
-        if (currentStatusFilter === "ACTIVE" && eff !== "ACTIVE") return false;
-        if (currentStatusFilter === "GIVEN" && eff !== "GIVEN") return false;
-        if (currentStatusFilter === "EXPIRED" && eff !== "EXPIRED") return false;
-        if (currentStatusFilter === "EXPIRING" && !isExpiringSoon(v)) return false;
+      let list = packs.filter(p => {
+        const expired = isPackExpired(p);
+        const total = p.links.length;
+        const claimed = p.links.filter(l => l.claimed).length;
+        const free = total - claimed;
 
-        if (gFilter !== "ALL" && v.game !== gFilter) return false;
-        if (tFilter !== "ALL" && v.type !== tFilter) return false;
+        if (currentStatusFilter === "AVAILABLE" && (expired || free <= 0)) return false;
+        if (currentStatusFilter === "COMPLETED" && (total === 0 || free > 0)) return false;
+        if (currentStatusFilter === "EXPIRED" && !expired) return false;
+        if (currentStatusFilter === "EXPIRING" && !isPackExpiringSoon(p)) return false;
+
+        if (gFilter !== "ALL" && p.game !== gFilter) return false;
+        if (tFilter !== "ALL" && p.type !== tFilter) return false;
 
         if (q) {
-          const hay = `${v.title || ""} ${v.note || ""} ${v.url || ""} ${v.game || ""} ${v.type || ""}`.toLowerCase();
+          const linksHay = p.links.map(l => `${l.url} ${l.note}`).join(" ");
+          const hay = `${p.title || ""} ${p.game || ""} ${p.type || ""} ${linksHay}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
         return true;
       });
 
       list.sort((a, b) => {
-        const ea = new Date(a.expiresAt).getTime() || 0;
-        const eb = new Date(b.expiresAt).getTime() || 0;
-        if (sortMode === "expiryAsc") return ea - eb;
-        if (sortMode === "expiryDesc") return eb - ea;
+        if (sortMode === "expiryAsc") {
+          return (new Date(a.expiresAt).getTime() || 0) - (new Date(b.expiresAt).getTime() || 0);
+        }
+        if (sortMode === "freeDesc") {
+          const fa = a.links.filter(l => !l.claimed).length;
+          const fb = b.links.filter(l => !l.claimed).length;
+          return fb - fa;
+        }
         return (b.createdAt || 0) - (a.createdAt || 0);
       });
 
-      shownCount.textContent = `Показано: ${list.length} из ${vouchers.length}`;
+      shownCount.textContent = `Показано: ${list.length} из ${packs.length}`;
 
       if (list.length === 0) {
         vouchersGrid.innerHTML = "";
@@ -671,87 +931,156 @@
       }
 
       emptyState.classList.add("hidden");
-      vouchersGrid.innerHTML = list.map(v => {
-        const eff = getEffectiveStatus(v);
-        const cd = formatCountdown(v.expiresAt);
-        const statusBadge = eff === "GIVEN"
-          ? `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-500/15 text-purple-300 border border-purple-500/30">Отдан</span>`
-          : eff === "EXPIRED"
-          ? `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">Истёк</span>`
-          : `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Активен</span>`;
+      vouchersGrid.innerHTML = list.map(p => {
+        const expired = isPackExpired(p);
+        const total = p.links.length;
+        const claimed = p.links.filter(l => l.claimed).length;
+        const free = total - claimed;
+        const cd = formatCountdown(p.expiresAt);
+        const isExpanded = expandedPacks.has(p.id);
+
+        // Unclaimed on top, claimed moved to bottom
+        const orderedLinks = [
+          ...p.links.filter(l => !l.claimed),
+          ...p.links.filter(l => l.claimed)
+        ];
+
+        const counterBadgeClass = expired
+          ? "bg-rose-500/20 text-rose-300 border-rose-500/35"
+          : free === 0
+          ? "bg-purple-500/20 text-purple-300 border-purple-500/35"
+          : "bg-emerald-500/20 text-emerald-300 border-emerald-500/35";
 
         const timerColor = cd.level === "expired"
-          ? "text-rose-400"
-          : cd.level === "urgent"
           ? "text-rose-400 font-semibold"
+          : cd.level === "urgent"
+          ? "text-rose-400 font-bold"
           : cd.level === "soon"
-          ? "text-amber-400 font-semibold"
-          : "text-slate-300";
+          ? "text-amber-400 font-bold"
+          : "text-purple-200/80";
+
+        const fitClass = p.imageFit === "cover" ? "object-cover" : "object-contain p-2";
 
         return `
-          <article class="bg-card hover:bg-cardHover border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col justify-between transition shadow-lg shadow-black/20">
+          <article class="bg-card/95 hover:bg-cardHover border border-purple-900/60 rounded-3xl overflow-hidden flex flex-col justify-between transition shadow-xl shadow-black/35">
             <div>
-              ${v.image ? `
-                <div class="w-full h-44 bg-[#0b0f19] border-b border-slate-800/70 overflow-hidden flex items-center justify-center">
-                  <img src="${v.image}" alt="${escapeHtml(v.title)}" class="w-full h-full object-contain" />
-                </div>
-              ` : `
-                <div class="w-full h-24 bg-gradient-to-r from-slate-900 via-[#121929] to-slate-900 border-b border-slate-800/70 flex items-center justify-center text-xs text-slate-500">
-                  Без изображения
-                </div>
-              `}
-
-              <div class="p-4 space-y-3">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/25">${escapeHtml(v.game || "Brawl Stars")}</span>
-                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">${escapeHtml(v.type || "Награда")}</span>
+              <!-- Large Reward Art -->
+              <div class="relative w-full h-52 bg-gradient-to-b from-[#1e1542] via-[#130d2b] to-[#0e0a21] border-b border-purple-900/50 flex items-center justify-center overflow-hidden">
+                ${p.image ? `
+                  <img src="${p.image}" alt="${escapeHtml(p.title)}" class="w-full h-full ${fitClass}" />
+                ` : `
+                  <div class="flex flex-col items-center gap-1 text-purple-300/40 text-xs">
+                    <div class="w-12 h-12 opacity-60">${PIN_CHILL_SVG}</div>
+                    <span>Без скриншота</span>
                   </div>
-                  ${statusBadge}
+                `}
+
+                <!-- Game & Type Badges -->
+                <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-[#0b0818]/85 backdrop-blur-md text-emerald-300 border border-emerald-400/30">
+                    ${escapeHtml(p.game || "Brawl Stars")}
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#0b0818]/85 backdrop-blur-md text-purple-200 border border-purple-500/30">
+                    ${escapeHtml(p.type || "Награда")}
+                  </span>
                 </div>
 
-                <h3 class="text-base font-bold text-white leading-snug">${escapeHtml(v.title)}</h3>
-
-                <!-- Copy Link -->
-                <div class="flex items-center gap-2 bg-[#0b0f19] border border-slate-800 rounded-xl px-3 py-2">
-                  <span class="text-xs text-slate-400 truncate flex-1 select-all">${escapeHtml(v.url)}</span>
-                  <button type="button" data-copy="${escapeAttr(v.url)}" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/35 text-blue-300 text-xs font-semibold shrink-0 transition">
-                    Копировать
-                  </button>
-                </div>
-
-                <!-- Note -->
-                <div>
-                  <input type="text" data-note-id="${v.id}" value="${escapeAttr(v.note || "")}" placeholder="Заметка: кому отдал и за что..."
-                    class="note-input w-full bg-[#0b0f19]/80 border border-slate-800/90 focus:border-blue-500 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none transition" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Footer Expiry & Actions -->
-            <div class="px-4 py-3 bg-[#0e1420] border-t border-slate-800/80 space-y-2.5">
-              <div class="flex items-center justify-between text-xs gap-2">
-                <span class="text-slate-400">До: <span class="text-slate-300">${formatDateReadable(v.expiresAt)}</span></span>
-                <span class="${timerColor}">${cd.label}</span>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 pt-0.5">
-                <button type="button" data-toggle-given="${v.id}" class="px-2.5 py-1.5 rounded-lg text-xs font-medium ${eff === "GIVEN" ? "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25" : "bg-purple-500/15 text-purple-300 hover:bg-purple-500/25"} transition">
-                  ${eff === "GIVEN" ? "Вернуть в активные" : "Отметить отданным"}
-                </button>
-
-                <div class="flex items-center gap-1">
-                  <button type="button" data-edit="${v.id}" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Редактировать">
+                <!-- Edit / Delete Top Right -->
+                <div class="absolute top-3 right-3 flex items-center gap-1 bg-[#0b0818]/80 backdrop-blur-md p-1 rounded-xl border border-purple-800/50">
+                  <button type="button" data-edit="${p.id}" class="p-1.5 rounded-lg text-purple-200 hover:text-white hover:bg-purple-800/60 transition" title="Редактировать набор">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
-                  <button type="button" data-delete="${v.id}" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition" title="Удалить">
+                  <button type="button" data-delete="${p.id}" class="p-1.5 rounded-lg text-purple-300 hover:text-rose-400 hover:bg-rose-500/15 transition" title="Удалить набор">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </div>
+              </div>
+
+              <!-- Title + Claimed Counter -->
+              <div class="p-4 space-y-3">
+                <div class="flex items-start justify-between gap-2.5">
+                  <h3 class="text-base sm:text-lg font-extrabold text-white leading-snug">${escapeHtml(p.title)}</h3>
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold border shrink-0 ${counterBadgeClass}">
+                    ${claimed}/${total} отдано
+                  </span>
+                </div>
+
+                <!-- Expiry Row -->
+                <div class="flex items-center justify-between text-xs bg-[#0e0a21] border border-purple-900/50 rounded-xl px-3 py-2">
+                  <span class="text-purple-300/70">До: <span class="text-purple-100 font-medium">${formatDateReadable(p.expiresAt)}</span></span>
+                  <span class="${timerColor}">${cd.label}</span>
+                </div>
+
+                <!-- Primary Action Buttons: Copy Next Free + Expand Links -->
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" data-copy-next="${p.id}" ${free === 0 || expired ? "disabled" : ""}
+                    class="px-3 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 ${
+                      free === 0 || expired
+                        ? "bg-slate-800/60 text-slate-500 cursor-not-allowed"
+                        : "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20"
+                    }">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span>Копировать своб.</span>
+                  </button>
+
+                  <button type="button" data-toggle-expand="${p.id}"
+                    class="px-3 py-2.5 rounded-xl bg-[#201842] hover:bg-[#2a2057] text-purple-100 border border-purple-700/50 text-xs font-bold transition flex items-center justify-center gap-1.5">
+                    <span>${isExpanded ? "Скрыть ссылки" : `Ссылки (${total})`}</span>
+                    <svg class="w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Collapsible Links List -->
+                ${isExpanded ? `
+                  <div class="pt-2 border-t border-purple-900/50 space-y-2 max-h-96 overflow-y-auto pr-0.5">
+                    ${orderedLinks.length === 0 ? `<p class="text-xs text-purple-300/50 text-center py-2">Ссылок пока нет</p>` : ""}
+                    ${orderedLinks.map((lnk, i) => `
+                      <div class="rounded-xl p-2.5 border transition ${
+                        lnk.claimed
+                          ? "bg-[#0c0918]/75 border-slate-800/80 opacity-65"
+                          : "bg-[#110c26] border-purple-800/60"
+                      }">
+                        <div class="flex items-center gap-2">
+                          <input type="checkbox" data-toggle-link="${p.id}:${lnk.id}" ${lnk.claimed ? "checked" : ""}
+                            title="Отметить как отданную"
+                            class="w-4 h-4 rounded accent-emerald-500 cursor-pointer shrink-0" />
+
+                          <span class="text-xs truncate flex-1 select-all ${
+                            lnk.claimed ? "line-through text-slate-400" : "text-purple-100 font-medium"
+                          }">${escapeHtml(lnk.url)}</span>
+
+                          <button type="button" data-copy-url="${escapeAttr(lnk.url)}"
+                            class="px-2 py-1 rounded-lg text-[11px] font-bold shrink-0 transition ${
+                              lnk.claimed
+                                ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                                : "bg-emerald-500/20 hover:bg-emerald-500/35 text-emerald-300"
+                            }">
+                            Копир.
+                          </button>
+                        </div>
+
+                        <div class="mt-2 pl-6">
+                          <input type="text" data-link-note="${p.id}:${lnk.id}" value="${escapeAttr(lnk.note || "")}"
+                            placeholder="Заметка: кому отдал и за что (необязательно)..."
+                            class="link-note-input w-full bg-[#090712]/90 border border-purple-900/50 focus:border-emerald-400 rounded-lg px-2.5 py-1 text-[11px] text-purple-100 placeholder-purple-300/35 outline-none transition" />
+                        </div>
+                      </div>
+                    `).join("")}
+
+                    <button type="button" data-quick-add-link="${p.id}"
+                      class="w-full py-2 rounded-xl border border-dashed border-purple-700/70 hover:border-emerald-400/70 text-xs font-bold text-purple-200 hover:text-emerald-300 transition">
+                      + Добавить ещё ссылку в этот набор
+                    </button>
+                  </div>
+                ` : ""}
               </div>
             </div>
           </article>
@@ -759,8 +1088,176 @@
       }).join("");
     }
 
+    async function persistPack(pack) {
+      pack.updatedAt = Date.now();
+      if (currentUser) {
+        setSyncState("sync", "Сохранение...");
+        await setDoc(doc(db, "users", currentUser.uid, "vouchers", pack.id), pack);
+      } else {
+        const idx = packs.findIndex(x => x.id === pack.id);
+        if (idx >= 0) packs[idx] = pack;
+        else packs.unshift(pack);
+        saveLocalData();
+        updateStats();
+        renderPacks();
+      }
+    }
+
+    // Parse Supercell Creators table or raw links
+    function parseSupercellInput(rawText) {
+      const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const extractedLinks = [];
+      let detectedTitle = "";
+      let detectedExpiryIso = "";
+      let detectedGame = "";
+
+      const urlRegex = /(https?:\/\/[^\s\t]+)/i;
+      // Match DD.MM.YYYY, HH:MM
+      const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})[,\s]+(\d{2}):(\d{2})/;
+
+      for (const line of lines) {
+        const urlMatch = line.match(urlRegex);
+        if (!urlMatch) continue;
+
+        const url = urlMatch[1].trim();
+        if (extractedLinks.some(x => x.url === url)) continue;
+
+        // Detect game from domain
+        if (!detectedGame) {
+          if (/brawlstars/i.test(url)) detectedGame = "Brawl Stars";
+          else if (/clashroyale/i.test(url)) detectedGame = "Clash Royale";
+          else if (/clashofclans/i.test(url)) detectedGame = "Clash of Clans";
+          else if (/squadbusters/i.test(url)) detectedGame = "Squad Busters";
+          else if (/hayday/i.test(url)) detectedGame = "Hay Day";
+          else if (/boombeach/i.test(url)) detectedGame = "Boom Beach";
+        }
+
+        // Split by tab or multiple spaces to read columns
+        const cols = line.split(/\t+|\s{2,}/).map(c => c.trim()).filter(Boolean);
+        if (cols.length >= 2 && !detectedTitle) {
+          const urlColIdx = cols.findIndex(c => urlRegex.test(c));
+          if (urlColIdx > 0) {
+            detectedTitle = cols[0];
+          }
+        }
+
+        // Check Is Claimable column (No -> already claimed)
+        let isClaimed = false;
+        const claimCol = cols.find(c => /^(yes|no)$/i.test(c));
+        if (claimCol && /^no$/i.test(claimCol)) {
+          isClaimed = true;
+        }
+
+        // Extract date
+        if (!detectedExpiryIso) {
+          const dm = line.match(dateRegex);
+          if (dm) {
+            const [, dd, mm, yyyy, hh, min] = dm;
+            const parsedDate = new Date(`${yyyy}-${mm}-${dd}T${hh}:${min}:00`);
+            if (!isNaN(parsedDate.getTime())) {
+              detectedExpiryIso = parsedDate.toISOString();
+            }
+          }
+        }
+
+        extractedLinks.push({
+          id: "lnk_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          url,
+          claimed: isClaimed,
+          note: ""
+        });
+      }
+
+      return { extractedLinks, detectedTitle, detectedExpiryIso, detectedGame };
+    }
+
+    document.getElementById("parseBulkBtn").addEventListener("click", () => {
+      const text = bulkPasteInput.value.trim();
+      if (!text) return;
+      const { extractedLinks, detectedTitle, detectedExpiryIso, detectedGame } = parseSupercellInput(text);
+
+      if (extractedLinks.length === 0) {
+        showToast("Ссылки не найдены в тексте");
+        return;
+      }
+
+      if (detectedTitle && !voucherTitle.value.trim()) {
+        voucherTitle.value = detectedTitle;
+      }
+      if (detectedExpiryIso) {
+        voucherExpiry.value = toDatetimeLocalValue(detectedExpiryIso);
+      }
+      if (detectedGame && categories.games.includes(detectedGame)) {
+        voucherGame.value = detectedGame;
+      }
+
+      const existingUrls = new Set(modalLinks.map(l => l.url));
+      let addedCount = 0;
+      for (const item of extractedLinks) {
+        if (!existingUrls.has(item.url)) {
+          modalLinks.push(item);
+          existingUrls.add(item.url);
+          addedCount++;
+        }
+      }
+
+      bulkPasteInput.value = "";
+      renderModalLinks();
+      showToast(`Добавлено ссылок: ${addedCount}`);
+    });
+
+    function renderModalLinks() {
+      modalLinksCount.textContent = modalLinks.length;
+      if (modalLinks.length === 0) {
+        modalLinksList.innerHTML = `<div class="text-xs text-purple-300/50 text-center py-4 bg-[#0d091d] rounded-xl border border-purple-900/40">Нажми «+ Добавить ссылку» или вставь таблицу выше</div>`;
+        return;
+      }
+
+      modalLinksList.innerHTML = modalLinks.map((lnk, idx) => `
+        <div class="flex items-center gap-2 bg-[#0d091d] border border-purple-900/60 rounded-xl p-2">
+          <input type="checkbox" data-modal-link-claimed="${idx}" ${lnk.claimed ? "checked" : ""} title="Отдана" class="w-4 h-4 accent-emerald-500 shrink-0" />
+          <input type="url" required data-modal-link-url="${idx}" value="${escapeAttr(lnk.url)}" placeholder="https://link.brawlstars.com/voucher/..."
+            class="flex-1 min-w-0 bg-transparent text-xs text-white placeholder-purple-300/35 outline-none" />
+          <input type="text" data-modal-link-note="${idx}" value="${escapeAttr(lnk.note || "")}" placeholder="Заметка..."
+            class="w-28 sm:w-36 bg-[#16112b] border border-purple-900/50 rounded-lg px-2 py-1 text-[11px] text-purple-100 placeholder-purple-300/35 outline-none" />
+          <button type="button" data-modal-link-del="${idx}" class="p-1 text-purple-400 hover:text-rose-400 shrink-0" title="Удалить ссылку">×</button>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("addSingleLinkRowBtn").addEventListener("click", () => {
+      modalLinks.push({
+        id: "lnk_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        url: "",
+        claimed: false,
+        note: ""
+      });
+      renderModalLinks();
+    });
+
+    modalLinksList.addEventListener("input", (e) => {
+      const urlIdx = e.target.getAttribute("data-modal-link-url");
+      if (urlIdx !== null) modalLinks[Number(urlIdx)].url = e.target.value;
+
+      const noteIdx = e.target.getAttribute("data-modal-link-note");
+      if (noteIdx !== null) modalLinks[Number(noteIdx)].note = e.target.value;
+    });
+
+    modalLinksList.addEventListener("change", (e) => {
+      const clIdx = e.target.getAttribute("data-modal-link-claimed");
+      if (clIdx !== null) modalLinks[Number(clIdx)].claimed = e.target.checked;
+    });
+
+    modalLinksList.addEventListener("click", (e) => {
+      const delIdx = e.target.getAttribute("data-modal-link-del");
+      if (delIdx !== null) {
+        modalLinks.splice(Number(delIdx), 1);
+        renderModalLinks();
+      }
+    });
+
     // Image compression helper
-    function compressImage(fileOrBlob, maxWidth = 900, quality = 0.78) {
+    function compressImage(fileOrBlob, maxWidth = 950, quality = 0.8) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
@@ -796,36 +1293,44 @@
     }
 
     function toDatetimeLocalValue(isoOrMs) {
-      const d = isoOrMs ? new Date(isoOrMs) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      const d = isoOrMs ? new Date(isoOrMs) : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
       if (isNaN(d.getTime())) return "";
       const pad = n => String(n).padStart(2, "0");
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
-    function openVoucherModal(existing = null, prefillImage = "") {
+    function openVoucherModal(existing = null, prefillImage = "", focusBulk = false) {
+      bulkPasteInput.value = "";
       if (existing) {
-        modalTitle.textContent = "Редактировать ваучер";
+        modalTitle.textContent = "Редактировать набор";
         editVoucherId.value = existing.id;
         voucherTitle.value = existing.title || "";
-        voucherUrl.value = existing.url || "";
         voucherGame.value = existing.game || categories.games[0] || "";
         voucherType.value = existing.type || categories.types[0] || "";
         voucherExpiry.value = toDatetimeLocalValue(existing.expiresAt);
-        voucherStatus.value = existing.status === "GIVEN" ? "GIVEN" : "ACTIVE";
-        voucherNote.value = existing.note || "";
+        voucherImageFit.value = existing.imageFit || "contain";
         setModalImage(existing.image || "");
+        modalLinks = existing.links.map(l => ({ ...l }));
       } else {
-        modalTitle.textContent = "Новый ваучер";
+        modalTitle.textContent = "Новый набор ваучеров";
         editVoucherId.value = "";
         voucherForm.reset();
         voucherGame.value = categories.games[0] || "";
         voucherType.value = categories.types[0] || "";
         voucherExpiry.value = toDatetimeLocalValue();
-        voucherStatus.value = "ACTIVE";
+        voucherImageFit.value = "contain";
         setModalImage(prefillImage || "");
+        modalLinks = [{
+          id: "lnk_" + Date.now(),
+          url: "",
+          claimed: false,
+          note: ""
+        }];
       }
+      renderModalLinks();
       voucherModal.classList.remove("hidden");
       voucherModal.classList.add("flex");
+      if (focusBulk) setTimeout(() => bulkPasteInput.focus(), 50);
     }
 
     function closeVoucherModal() {
@@ -834,6 +1339,7 @@
     }
 
     document.getElementById("openAddBtn").addEventListener("click", () => openVoucherModal());
+    document.getElementById("quickPasteTableBtn").addEventListener("click", () => openVoucherModal(null, "", true));
     document.getElementById("closeVoucherModal").addEventListener("click", closeVoucherModal);
     document.getElementById("cancelVoucherBtn").addEventListener("click", closeVoucherModal);
 
@@ -865,7 +1371,7 @@
       setModalImage("");
     });
 
-    // Global Ctrl+V paste support
+    // Global Ctrl+V screenshot paste
     window.addEventListener("paste", async (e) => {
       const items = e.clipboardData?.items;
       if (!items) return;
@@ -880,7 +1386,7 @@
               showToast("Скриншот вставлен");
             } else {
               openVoucherModal(null, compressed);
-              showToast("Скриншот вставлен в новый ваучер");
+              showToast("Скриншот вставлен в новый набор");
             }
           }
           break;
@@ -890,44 +1396,65 @@
 
     voucherForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const id = editVoucherId.value || ("v_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6));
-      const existing = vouchers.find(x => x.id === id);
+      const cleanedLinks = modalLinks
+        .map(l => ({ ...l, url: l.url.trim(), note: (l.note || "").trim() }))
+        .filter(l => l.url.length > 0);
+
+      if (cleanedLinks.length === 0) {
+        showToast("Добавь хотя бы одну ссылку");
+        return;
+      }
+
+      const id = editVoucherId.value || ("pack_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6));
+      const existing = packs.find(x => x.id === id);
 
       const payload = {
         id,
         title: voucherTitle.value.trim(),
-        url: voucherUrl.value.trim(),
         game: voucherGame.value,
         type: voucherType.value,
         expiresAt: new Date(voucherExpiry.value).toISOString(),
-        status: voucherStatus.value,
-        note: voucherNote.value.trim(),
         image: currentImageData || "",
+        imageFit: voucherImageFit.value,
+        links: cleanedLinks,
         createdAt: existing?.createdAt || Date.now(),
         updatedAt: Date.now()
       };
 
-      if (currentUser) {
-        setSyncState("sync", "Сохранение...");
-        await setDoc(doc(db, "users", currentUser.uid, "vouchers", id), payload);
-      } else {
-        if (existing) {
-          vouchers = vouchers.map(x => x.id === id ? payload : x);
-        } else {
-          vouchers.unshift(payload);
-        }
-        saveLocalData();
-        updateStats();
-        renderVouchers();
-      }
-
+      await persistPack(payload);
       closeVoucherModal();
-      showToast("Ваучер сохранён");
+      showToast("Набор сохранён");
     });
 
-    // Grid actions: copy, toggle given, edit, delete, note
+    // Card Interactions
     vouchersGrid.addEventListener("click", async (e) => {
-      const copyUrl = e.target.closest("[data-copy]")?.getAttribute("data-copy");
+      // Copy next free link
+      const nextPackId = e.target.closest("[data-copy-next]")?.getAttribute("data-copy-next");
+      if (nextPackId) {
+        const pack = packs.find(p => p.id === nextPackId);
+        const freeLink = pack?.links.find(l => !l.claimed);
+        if (freeLink) {
+          try {
+            await navigator.clipboard.writeText(freeLink.url);
+            showToast("Свободная ссылка скопирована");
+          } catch {
+            showToast("Не удалось скопировать");
+          }
+        }
+        return;
+      }
+
+      // Expand / collapse links list
+      const expId = e.target.closest("[data-toggle-expand]")?.getAttribute("data-toggle-expand");
+      if (expId) {
+        if (expandedPacks.has(expId)) expandedPacks.delete(expId);
+        else expandedPacks.add(expId);
+        renderPacks();
+        return;
+      }
+
+      // Copy specific link
+      const copyUrl = e.target.closest("[data-copy-url]")?.getAttribute("data-copy-url");
       if (copyUrl) {
         try {
           await navigator.clipboard.writeText(copyUrl);
@@ -938,90 +1465,99 @@
         return;
       }
 
-      const givenId = e.target.closest("[data-toggle-given]")?.getAttribute("data-toggle-given");
-      if (givenId) {
-        const target = vouchers.find(x => x.id === givenId);
-        if (!target) return;
-        const nextStatus = target.status === "GIVEN" ? "ACTIVE" : "GIVEN";
-        if (currentUser) {
-          await updateDoc(doc(db, "users", currentUser.uid, "vouchers", givenId), { status: nextStatus, updatedAt: Date.now() });
-        } else {
-          target.status = nextStatus;
-          saveLocalData();
-          updateStats();
-          renderVouchers();
-        }
+      // Quick add link inside expanded card
+      const quickAddPackId = e.target.closest("[data-quick-add-link]")?.getAttribute("data-quick-add-link");
+      if (quickAddPackId) {
+        const pack = packs.find(p => p.id === quickAddPackId);
+        if (pack) openVoucherModal(pack);
         return;
       }
 
+      // Edit pack
       const editId = e.target.closest("[data-edit]")?.getAttribute("data-edit");
       if (editId) {
-        const target = vouchers.find(x => x.id === editId);
-        if (target) openVoucherModal(target);
+        const pack = packs.find(p => p.id === editId);
+        if (pack) openVoucherModal(pack);
         return;
       }
 
+      // Delete pack
       const delId = e.target.closest("[data-delete]")?.getAttribute("data-delete");
       if (delId) {
         if (currentUser) {
           await deleteDoc(doc(db, "users", currentUser.uid, "vouchers", delId));
         } else {
-          vouchers = vouchers.filter(x => x.id !== delId);
+          packs = packs.filter(p => p.id !== delId);
           saveLocalData();
           updateStats();
-          renderVouchers();
+          renderPacks();
         }
-        showToast("Ваучер удалён");
+        showToast("Набор удалён");
       }
     });
 
-    async function saveInlineNote(inputEl) {
-      const id = inputEl.getAttribute("data-note-id");
-      const val = inputEl.value.trim();
-      const target = vouchers.find(x => x.id === id);
-      if (!target || (target.note || "") === val) return;
-
-      if (currentUser) {
-        await updateDoc(doc(db, "users", currentUser.uid, "vouchers", id), { note: val, updatedAt: Date.now() });
-      } else {
-        target.note = val;
-        saveLocalData();
+    // Toggle claimed checkbox inside card
+    vouchersGrid.addEventListener("change", async (e) => {
+      const togglePair = e.target.getAttribute("data-toggle-link");
+      if (togglePair) {
+        const [packId, linkId] = togglePair.split(":");
+        const pack = packs.find(p => p.id === packId);
+        const link = pack?.links.find(l => l.id === linkId);
+        if (pack && link) {
+          link.claimed = e.target.checked;
+          await persistPack(pack);
+          showToast(link.claimed ? "Отмечено как отдано" : "Возвращено в свободные");
+        }
+        return;
       }
-      showToast("Заметка сохранена");
-    }
 
-    vouchersGrid.addEventListener("change", (e) => {
-      if (e.target.classList.contains("note-input")) saveInlineNote(e.target);
+      if (e.target.classList.contains("link-note-input")) {
+        await saveInlineLinkNote(e.target);
+      }
     });
 
     vouchersGrid.addEventListener("keydown", (e) => {
-      if (e.target.classList.contains("note-input") && e.key === "Enter") {
+      if (e.target.classList.contains("link-note-input") && e.key === "Enter") {
         e.target.blur();
       }
     });
+
+    async function saveInlineLinkNote(inputEl) {
+      const pair = inputEl.getAttribute("data-link-note");
+      if (!pair) return;
+      const [packId, linkId] = pair.split(":");
+      const pack = packs.find(p => p.id === packId);
+      const link = pack?.links.find(l => l.id === linkId);
+      const val = inputEl.value.trim();
+      if (!pack || !link || (link.note || "") === val) return;
+
+      link.note = val;
+      await persistPack(pack);
+      showToast("Заметка сохранена");
+    }
 
     // Filter listeners
     document.querySelectorAll(".status-tab").forEach(btn => {
       btn.addEventListener("click", () => {
         currentStatusFilter = btn.getAttribute("data-status");
         document.querySelectorAll(".status-tab").forEach(b => {
-          b.classList.remove("bg-blue-600", "text-white");
+          b.classList.remove("bg-emerald-500", "text-slate-950", "font-bold");
           if (b.getAttribute("data-status") !== "EXPIRING") {
-            b.classList.add("bg-slate-800/80", "text-slate-300");
+            b.classList.add("bg-[#1f183d]", "text-purple-200", "font-semibold");
           }
         });
         if (currentStatusFilter !== "EXPIRING") {
-          btn.classList.remove("bg-slate-800/80", "text-slate-300");
-          btn.classList.add("bg-blue-600", "text-white");
+          btn.classList.remove("bg-[#1f183d]", "text-purple-200", "font-semibold");
+          btn.classList.add("bg-emerald-500", "text-slate-950", "font-bold");
         }
-        renderVouchers();
+        renderPacks();
       });
     });
 
-    searchInput.addEventListener("input", renderVouchers);
-    filterGame.addEventListener("change", renderVouchers);
-    filterType.addEventListener("change", renderVouchers);
-    sortSelect.addEventListener("change", renderVouchers);
+    searchInput.addEventListener("input", renderPacks);
+    filterGame.addEventListener("change", renderPacks);
+    filterType.addEventListener("change", renderPacks);
+    sortSelect.addEventListener("change", renderPacks);
 
     function escapeHtml(str) {
       return String(str || "")
@@ -1039,10 +1575,10 @@
     loadLocalData();
     populateCategorySelects();
     updateStats();
-    renderVouchers();
+    renderPacks();
     setInterval(() => {
       updateStats();
-      renderVouchers();
+      renderPacks();
     }, 60000);
   </script>
 </body>
