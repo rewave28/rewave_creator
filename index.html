@@ -1,1604 +1,1049 @@
 <!DOCTYPE html>
 <html lang="ru" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supercell Creator Vault — Менеджер ваучеров</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Rubik (для игровых акцентов) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rubik:wght@600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Rubik', 'sans-serif'],
-                    },
-                    colors: {
-                        sc: {
-                            bg: '#0b0e14',
-                            card: '#131823',
-                            cardHover: '#19202e',
-                            border: '#232c3d',
-                            blue: '#2563eb',
-                            blueBright: '#3b82f6',
-                            gold: '#f59e0b',
-                            goldBright: '#fbbf24',
-                            green: '#10b981',
-                            red: '#ef4444',
-                            purple: '#8b5cf6'
-                        }
-                    }
-                }
-            }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supercell Creator Vault</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            surface: '#0b0f19',
+            card: '#131926',
+            cardHover: '#1a2234',
+            accent: '#3b82f6',
+          }
         }
-    </script>
-    <style>
-        body {
-            background-color: #0b0e14;
-            color: #f1f5f9;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Кастомный скроллбар */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0e14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #232c3d;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-
-        /* Игровые кнопки и эффекты */
-        .btn-supercell {
-            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-            box-shadow: 0 4px 0 #1d4ed8, 0 8px 16px rgba(37, 99, 235, 0.35);
-            transition: all 0.12s ease;
-        }
-        .btn-supercell:hover {
-            filter: brightness(1.08);
-            transform: translateY(-1px);
-        }
-        .btn-supercell:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #1d4ed8, 0 4px 8px rgba(37, 99, 235, 0.25);
-        }
-
-        .btn-gold {
-            background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
-            box-shadow: 0 4px 0 #b45309, 0 8px 16px rgba(245, 158, 11, 0.25);
-            color: #0f172a;
-            transition: all 0.12s ease;
-        }
-        .btn-gold:hover {
-            filter: brightness(1.06);
-            transform: translateY(-1px);
-        }
-        .btn-gold:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #b45309;
-        }
-
-        .voucher-card {
-            background: linear-gradient(160deg, #151b28 0%, #10151f 100%);
-            border: 1px solid #232c3d;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .voucher-card:hover {
-            border-color: #384661;
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Анимация вставки из буфера */
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
-        }
-        .paste-active {
-            animation: pulseGlow 1.5s infinite;
-            border-color: #3b82f6 !important;
-            background-color: rgba(59, 130, 246, 0.08) !important;
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0b0f19; color: #f1f5f9; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #263147; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #374663; }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-blue-500/30 selection:text-blue-200">
 
-    <!-- Уведомления (Toast контейнер) -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
-
-    <!-- Шапка приложения -->
-    <header class="sticky top-0 z-30 bg-[#0b0e14]/90 backdrop-blur-md border-b border-sc-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
-            <!-- Логотип -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/15 shrink-0">
-                    <i data-lucide="ticket" class="w-6 h-6 text-white"></i>
-                </div>
-                <div>
-                    <h1 class="font-display font-bold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
-                        CREATOR VAULT
-                        <span class="hidden sm:inline-block text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">Supercell</span>
-                    </h1>
-                    <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                        <span id="sync-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                        <span id="sync-status-text">Подключение к облаку...</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Правая панель: Управление категориями + Аккаунт + Добавить -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                <!-- Кнопка категорий -->
-                <button onclick="openCategoriesModal()" title="Управление играми и типами наград" class="p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl bg-sc-card hover:bg-sc-cardHover border border-sc-border text-slate-300 hover:text-white transition flex items-center gap-2 text-sm font-medium">
-                    <i data-lucide="folder-cog" class="w-4 h-4 text-amber-400"></i>
-                    <span class="hidden md:inline">Категории</span>
-                </button>
-
-                <!-- Блок аккаунта / синхронизации -->
-                <div id="auth-container" class="flex items-center">
-                    <button id="btn-google-login" onclick="handleGoogleSignIn()" class="p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl bg-sc-card hover:bg-sc-cardHover border border-sc-border text-slate-200 transition flex items-center gap-2 text-sm font-medium">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/>
-                            <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/>
-                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/>
-                        </svg>
-                        <span class="hidden lg:inline">Войти с Google</span>
-                    </button>
-                    
-                    <div id="user-profile-badge" class="hidden items-center gap-2 bg-sc-card border border-sc-border rounded-xl p-1.5 pr-3">
-                        <img id="user-avatar" src="" alt="Профиль" class="w-7 h-7 rounded-lg object-cover bg-slate-800">
-                        <div class="hidden sm:flex flex-col text-left">
-                            <span id="user-name" class="text-xs font-semibold text-white leading-none truncate max-w-[110px]">Креатор</span>
-                            <span class="text-[10px] text-emerald-400 leading-tight">Синхронизировано</span>
-                        </div>
-                        <button onclick="handleSignOut()" title="Выйти из аккаунта" class="ml-1 p-1 text-slate-400 hover:text-red-400 rounded-lg transition">
-                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Главная кнопка добавления -->
-                <button onclick="openVoucherModal()" class="btn-supercell px-3.5 sm:px-5 py-2.5 rounded-xl font-display font-bold text-sm text-white flex items-center gap-2 cursor-pointer">
-                    <i data-lucide="plus" class="w-5 h-5 stroke-[2.5]"></i>
-                    <span class="hidden sm:inline">Добавить ваучер</span>
-                    <span class="sm:hidden">Добавить</span>
-                </button>
-            </div>
+  <!-- Header -->
+  <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-[#0b0f19]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+          </svg>
         </div>
-    </header>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold tracking-tight text-base sm:text-lg text-white truncate">CREATOR VAULT</span>
+            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">SUPERCELL</span>
+          </div>
+          <div id="syncStatus" class="flex items-center gap-1.5 text-xs text-slate-400">
+            <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span id="syncText">Вход не выполнен</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- Основной контент -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <button id="openCategoriesBtn" class="px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700/70 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+          </svg>
+          <span class="hidden sm:inline">Категории</span>
+        </button>
 
-        <!-- Баннер подсказки про синхронизацию между устройствами (если анонимный вход) -->
-        <div id="guest-sync-banner" class="hidden rounded-2xl bg-gradient-to-r from-blue-950/70 via-indigo-950/60 to-slate-900 border border-blue-500/30 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="flex items-start sm:items-center gap-3">
-                <div class="p-2.5 rounded-xl bg-blue-500/20 text-blue-400 shrink-0">
-                    <i data-lucide="smartphone" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-white">Синхронизация между ПК и телефоном</h3>
-                    <p class="text-xs text-slate-300 mt-0.5">Сейчас используется гостевая сессия. Войдите через Google на обоих устройствах, чтобы мгновенно видеть все ваучеры и картинки везде.</p>
-                </div>
+        <button id="openAddBtn" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/25 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          <span>Добавить ваучер</span>
+        </button>
+
+        <div id="authArea">
+          <button id="googleLoginBtn" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.54-1.14 2.85-2.4 3.72v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.22z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            <span class="hidden md:inline">Войти с Google</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- Stats Grid -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs text-slate-400 font-medium">Всего ваучеров</p>
+          <p id="statTotal" class="text-2xl font-bold text-white mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs text-slate-400 font-medium">Активные</p>
+          <p id="statActive" class="text-2xl font-bold text-emerald-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs text-slate-400 font-medium">Отданные</p>
+          <p id="statGiven" class="text-2xl font-bold text-purple-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="bg-card border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs text-slate-400 font-medium">Скоро сгорят (&lt;3 дн.)</p>
+          <p id="statExpiring" class="text-2xl font-bold text-amber-400 mt-1">0</p>
+        </div>
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters & Search -->
+    <section class="bg-card border border-slate-800/80 rounded-2xl p-4 space-y-3">
+      <div class="relative">
+        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input id="searchInput" type="text" placeholder="Поиск по названию, заметке (кому отдал) или ссылке..."
+          class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition" />
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <select id="filterGame" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+          <option value="ALL">Все игры</option>
+        </select>
+
+        <select id="filterType" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+          <option value="ALL">Все типы наград</option>
+        </select>
+
+        <select id="sortSelect" class="bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-slate-200 outline-none">
+          <option value="expiryAsc">Сначала скоро истекающие</option>
+          <option value="newest">Сначала новые</option>
+          <option value="expiryDesc">Сначала долгие</option>
+        </select>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+        <div id="statusTabs" class="flex flex-wrap items-center gap-1.5">
+          <button data-status="ALL" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition">Все</button>
+          <button data-status="ACTIVE" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Активные</button>
+          <button data-status="GIVEN" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Отданные</button>
+          <button data-status="EXPIRED" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition">Истекшие</button>
+          <button data-status="EXPIRING" class="status-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition">🔥 Скоро сгорят</button>
+        </div>
+        <span id="shownCount" class="text-xs text-slate-400">Показано: 0 из 0</span>
+      </div>
+    </section>
+
+    <!-- Vouchers Grid -->
+    <section id="vouchersGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></section>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden bg-card border border-dashed border-slate-800 rounded-2xl p-10 text-center space-y-3">
+      <div class="w-12 h-12 rounded-2xl bg-slate-800/90 text-slate-400 mx-auto flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-white">Ваучеров пока нет</h3>
+      <p class="text-sm text-slate-400 max-w-md mx-auto">Нажми «Добавить ваучер» или просто скопируй скриншот награды и нажми <kbd class="px-1.5 py-0.5 text-xs bg-slate-800 rounded border border-slate-700 text-slate-200">Ctrl + V</kbd> на ПК.</p>
+    </div>
+  </main>
+
+  <!-- Add / Edit Voucher Modal -->
+  <div id="voucherModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-card border border-slate-800 rounded-2xl w-full max-w-lg p-5 sm:p-6 space-y-4 my-auto shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h2 id="modalTitle" class="text-lg font-bold text-white">Новый ваучер</h2>
+        <button id="closeVoucherModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="voucherForm" class="space-y-3.5">
+        <input type="hidden" id="editVoucherId" />
+
+        <!-- Image Drop / Paste / Upload -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1.5">Фото награды (на ПК можно нажать <span class="text-blue-400 font-semibold">Ctrl + V</span>, на телефоне — выбрать файл)</label>
+          <div id="imageDropZone" class="relative border-2 border-dashed border-slate-700 hover:border-blue-500/70 rounded-xl p-3 bg-[#0b0f19] transition cursor-pointer flex flex-col items-center justify-center min-h-[140px] text-center">
+            <input id="imageFileInput" type="file" accept="image/*" class="hidden" />
+            <img id="imagePreview" src="" alt="Превью" class="hidden max-h-44 rounded-lg object-contain mb-2" />
+            <div id="imagePlaceholder" class="space-y-1 py-2">
+              <svg class="w-7 h-7 text-slate-400 mx-auto" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p class="text-xs text-slate-300 font-medium">Нажми для загрузки или вставь скриншот через Ctrl+V</p>
+              <p class="text-[11px] text-slate-500">Автоматически сожмётся для быстрой синхронизации</p>
             </div>
-            <button onclick="handleGoogleSignIn()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition shrink-0 w-full sm:w-auto text-center">
-                Синхронизировать аккаунт
+            <button type="button" id="clearImageBtn" class="hidden mt-2 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-xs font-medium">
+              Удалить фото
             </button>
+          </div>
         </div>
 
-        <!-- Панель статистики -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div onclick="setStatusFilter('all')" class="cursor-pointer bg-sc-card hover:bg-sc-cardHover border border-sc-border rounded-2xl p-4 transition flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Всего ваучеров</p>
-                    <p id="stat-total" class="font-display text-2xl sm:text-3xl font-bold text-white mt-1">0</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-slate-300">
-                    <i data-lucide="layers" class="w-5 h-5"></i>
-                </div>
-            </div>
-
-            <div onclick="setStatusFilter('active')" class="cursor-pointer bg-sc-card hover:bg-sc-cardHover border border-sc-border rounded-2xl p-4 transition flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Активные</p>
-                    <p id="stat-active" class="font-display text-2xl sm:text-3xl font-bold text-emerald-400 mt-1">0</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-                </div>
-            </div>
-
-            <div onclick="setStatusFilter('given')" class="cursor-pointer bg-sc-card hover:bg-sc-cardHover border border-sc-border rounded-2xl p-4 transition flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Отданные</p>
-                    <p id="stat-given" class="font-display text-2xl sm:text-3xl font-bold text-purple-400 mt-1">0</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-                    <i data-lucide="gift" class="w-5 h-5"></i>
-                </div>
-            </div>
-
-            <div onclick="setExpiringSoonFilter()" class="cursor-pointer bg-sc-card hover:bg-sc-cardHover border border-sc-border rounded-2xl p-4 transition flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Скоро сгорят (&lt;3 дн.)</p>
-                    <p id="stat-expiring" class="font-display text-2xl sm:text-3xl font-bold text-amber-400 mt-1">0</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                    <i data-lucide="flame" class="w-5 h-5"></i>
-                </div>
-            </div>
-        </section>
-
-        <!-- Панель фильтров, поиска и сортировки -->
-        <section class="bg-sc-card border border-sc-border rounded-2xl p-4 space-y-4">
-            <div class="flex flex-col lg:flex-row gap-3">
-                <!-- Поиск -->
-                <div class="relative flex-1">
-                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input type="text" id="search-input" oninput="renderVouchers()" placeholder="Поиск по названию, заметке (кому отдал) или ссылке..." class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl pl-10 pr-9 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition">
-                    <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <!-- Селекты фильтров -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:w-auto">
-                    <!-- Игра -->
-                    <div class="relative">
-                        <select id="filter-game" onchange="renderVouchers()" class="w-full sm:w-44 appearance-none bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl pl-3.5 pr-9 py-2.5 text-sm text-white outline-none cursor-pointer">
-                            <option value="all">Все игры</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                    </div>
-
-                    <!-- Тип награды -->
-                    <div class="relative">
-                        <select id="filter-type" onchange="renderVouchers()" class="w-full sm:w-44 appearance-none bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl pl-3.5 pr-9 py-2.5 text-sm text-white outline-none cursor-pointer">
-                            <option value="all">Все типы наград</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                    </div>
-
-                    <!-- Сортировка -->
-                    <div class="relative">
-                        <select id="sort-by" onchange="renderVouchers()" class="w-full sm:w-52 appearance-none bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl pl-3.5 pr-9 py-2.5 text-sm text-white outline-none cursor-pointer">
-                            <option value="expiring_asc">Сначала скоро истекающие</option>
-                            <option value="newest">Сначала новые</option>
-                            <option value="name_asc">По названию (А-Я)</option>
-                        </select>
-                        <i data-lucide="arrow-up-down" class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладки статусов и быстрые чипсы типов -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-sc-border/60">
-                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar" id="status-tabs">
-                    <button data-status="all" onclick="setStatusFilter('all')" class="status-tab active px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-blue-600 text-white">Все</button>
-                    <button data-status="active" onclick="setStatusFilter('active')" class="status-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-[#0b0e14] text-slate-400 hover:text-white border border-sc-border">Активные</button>
-                    <button data-status="given" onclick="setStatusFilter('given')" class="status-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-[#0b0e14] text-slate-400 hover:text-white border border-sc-border">Отданные</button>
-                    <button data-status="expired" onclick="setStatusFilter('expired')" class="status-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-[#0b0e14] text-slate-400 hover:text-white border border-sc-border">Истекшие</button>
-                    <button data-status="expiring_soon" onclick="setStatusFilter('expiring_soon')" class="status-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-[#0b0e14] text-amber-400/90 hover:text-amber-300 border border-sc-border">🔥 Скоро сгорят</button>
-                </div>
-
-                <div class="text-xs text-slate-400 flex items-center justify-between sm:justify-end gap-3">
-                    <span id="results-counter">Найдено: 0</span>
-                    <button id="reset-filters-btn" onclick="resetAllFilters()" class="hidden text-blue-400 hover:text-blue-300 font-medium">Сбросить фильтры</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Сетка ваучеров -->
-        <section id="vouchers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-            <!-- Карточки рендерятся динамически -->
-        </section>
-
-        <!-- Пустое состояние -->
-        <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-sc-card/50 border border-dashed border-sc-border rounded-3xl">
-            <div class="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center text-slate-400 mb-4">
-                <i data-lucide="ticket" class="w-8 h-8"></i>
-            </div>
-            <h3 class="font-display text-lg font-bold text-white">Ваучеров пока нет</h3>
-            <p class="text-sm text-slate-400 max-w-md mt-1 mb-6">Добавь свою первую ссылку на награду Supercell, прикрепи скриншот через Ctrl+V или с телефона и следи за сроком действия.</p>
-            <button onclick="openVoucherModal()" class="btn-supercell px-5 py-2.5 rounded-xl font-display font-bold text-sm text-white flex items-center gap-2">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                Добавить первый ваучер
-            </button>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Название награды *</label>
+          <input id="voucherTitle" type="text" required placeholder="Например: Скин на Шелли / 10 Стар Дропов"
+            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
         </div>
-    </main>
 
-    <!-- МОДАЛЬНОЕ ОКНО: Добавление / Редактирование ваучера -->
-    <div id="voucher-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-        <div class="bg-[#131823] border border-sc-border rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
-            <!-- Заголовок модалки -->
-            <div class="px-6 py-4 border-b border-sc-border flex items-center justify-between bg-[#161c29]">
-                <h2 id="modal-title" class="font-display font-bold text-lg text-white flex items-center gap-2">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>
-                    Новый ваучер
-                </h2>
-                <button onclick="closeVoucherModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Ссылка на ваучер *</label>
+          <input id="voucherUrl" type="url" required placeholder="https://link.brawlstars.com/..."
+            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Игра Supercell</label>
+            <select id="voucherGame" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Тип награды</label>
+            <select id="voucherType" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none"></select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Срок действия до *</label>
+            <input id="voucherExpiry" type="datetime-local" required
+              class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Статус</label>
+            <select id="voucherStatus" class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none">
+              <option value="ACTIVE">Активен</option>
+              <option value="GIVEN">Отдан</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Заметка (кому отдал и за что)</label>
+          <input id="voucherNote" type="text" placeholder="Например: @nickname — за конкурс в Telegram"
+            class="w-full bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" id="cancelVoucherBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition">Отмена</button>
+          <button type="submit" id="saveVoucherBtn" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Categories Manager Modal -->
+  <div id="categoriesModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-card border border-slate-800 rounded-2xl w-full max-w-xl p-5 sm:p-6 space-y-5 my-auto shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white">Управление категориями</h2>
+        <button id="closeCategoriesModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Games -->
+      <div class="space-y-2.5">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Игры Supercell</h3>
+        <div class="flex gap-2">
+          <input id="newGameInput" type="text" placeholder="Новая игра..."
+            class="flex-1 bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+          <button id="addGameBtn" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Добавить</button>
+        </div>
+        <div id="gamesList" class="flex flex-wrap gap-2 pt-1"></div>
+      </div>
+
+      <hr class="border-slate-800" />
+
+      <!-- Reward Types -->
+      <div class="space-y-2.5">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Типы наград</h3>
+        <div class="flex gap-2">
+          <input id="newTypeInput" type="text" placeholder="Новый тип награды..."
+            class="flex-1 bg-[#0b0f19] border border-slate-800 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-white outline-none" />
+          <button id="addTypeBtn" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition">Добавить</button>
+        </div>
+        <div id="typesList" class="flex flex-wrap gap-2 pt-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm font-medium shadow-xl"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCyp12uB5tsMCM6UqmBwQK-vODqDB-xF0",
+      authDomain: "rewave-supercell-creator.firebaseapp.com",
+      projectId: "rewave-supercell-creator",
+      storageBucket: "rewave-supercell-creator.firebasestorage.app",
+      messagingSenderId: "705159445306",
+      appId: "1:705159445306:web:6917481006a624e6a16e03",
+      measurementId: "G-39RJ9ZFT66"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    const DEFAULT_GAMES = ["Brawl Stars", "Clash Royale", "Clash of Clans", "Squad Busters", "Hay Day", "Boom Beach"];
+    const DEFAULT_TYPES = ["Пин", "Спрей", "Иконка", "Скин", "БП", "Стар дропы"];
+
+    const LOCAL_VOUCHERS_KEY = "sc_vault_vouchers_v1";
+    const LOCAL_CATS_KEY = "sc_vault_cats_v1";
+
+    let currentUser = null;
+    let vouchers = [];
+    let categories = { games: [...DEFAULT_GAMES], types: [...DEFAULT_TYPES] };
+    let currentStatusFilter = "ALL";
+    let currentImageData = "";
+    let unsubVouchers = null;
+    let unsubCats = null;
+
+    // Elements
+    const authArea = document.getElementById("authArea");
+    const syncDot = document.getElementById("syncDot");
+    const syncText = document.getElementById("syncText");
+    const vouchersGrid = document.getElementById("vouchersGrid");
+    const emptyState = document.getElementById("emptyState");
+    const shownCount = document.getElementById("shownCount");
+
+    const filterGame = document.getElementById("filterGame");
+    const filterType = document.getElementById("filterType");
+    const sortSelect = document.getElementById("sortSelect");
+    const searchInput = document.getElementById("searchInput");
+
+    const voucherModal = document.getElementById("voucherModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const voucherForm = document.getElementById("voucherForm");
+    const editVoucherId = document.getElementById("editVoucherId");
+    const voucherTitle = document.getElementById("voucherTitle");
+    const voucherUrl = document.getElementById("voucherUrl");
+    const voucherGame = document.getElementById("voucherGame");
+    const voucherType = document.getElementById("voucherType");
+    const voucherExpiry = document.getElementById("voucherExpiry");
+    const voucherStatus = document.getElementById("voucherStatus");
+    const voucherNote = document.getElementById("voucherNote");
+
+    const imageDropZone = document.getElementById("imageDropZone");
+    const imageFileInput = document.getElementById("imageFileInput");
+    const imagePreview = document.getElementById("imagePreview");
+    const imagePlaceholder = document.getElementById("imagePlaceholder");
+    const clearImageBtn = document.getElementById("clearImageBtn");
+
+    const categoriesModal = document.getElementById("categoriesModal");
+    const gamesList = document.getElementById("gamesList");
+    const typesList = document.getElementById("typesList");
+    const newGameInput = document.getElementById("newGameInput");
+    const newTypeInput = document.getElementById("newTypeInput");
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.remove("hidden");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.add("hidden"), 2500);
+    }
+
+    function loadLocalData() {
+      try {
+        const v = localStorage.getItem(LOCAL_VOUCHERS_KEY);
+        if (v) vouchers = JSON.parse(v);
+        const c = localStorage.getItem(LOCAL_CATS_KEY);
+        if (c) {
+          const parsed = JSON.parse(c);
+          categories = {
+            games: Array.isArray(parsed.games) && parsed.games.length ? parsed.games : [...DEFAULT_GAMES],
+            types: Array.isArray(parsed.types) && parsed.types.length ? parsed.types : [...DEFAULT_TYPES]
+          };
+        }
+      } catch (e) {}
+    }
+
+    function saveLocalData() {
+      try {
+        localStorage.setItem(LOCAL_VOUCHERS_KEY, JSON.stringify(vouchers));
+        localStorage.setItem(LOCAL_CATS_KEY, JSON.stringify(categories));
+      } catch (e) {}
+    }
+
+    function setSyncState(mode, text) {
+      syncText.textContent = text;
+      syncDot.className = "w-2 h-2 rounded-full " + (
+        mode === "ok" ? "bg-emerald-400" :
+        mode === "sync" ? "bg-blue-400 animate-pulse" :
+        "bg-amber-400"
+      );
+    }
+
+    function renderAuthUI(user) {
+      if (user) {
+        authArea.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="${user.photoURL || ''}" alt="" class="w-8 h-8 rounded-full border border-slate-700 object-cover ${user.photoURL ? '' : 'hidden'}" />
+            <button id="logoutBtn" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">Выйти</button>
+          </div>
+        `;
+        document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+      } else {
+        authArea.innerHTML = `
+          <button id="googleLoginBtn" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.54-1.14 2.85-2.4 3.72v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.22z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            <span class="hidden md:inline">Войти с Google</span>
+          </button>
+        `;
+        document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+          try {
+            await signInWithPopup(auth, provider);
+          } catch (err) {
+            showToast("Ошибка входа: " + (err.code || err.message));
+          }
+        });
+      }
+    }
+
+    function subscribeCloud(uid) {
+      if (unsubVouchers) unsubVouchers();
+      if (unsubCats) unsubCats();
+
+      setSyncState("sync", "Синхронизация...");
+
+      const catRef = doc(db, "users", uid, "settings", "categories");
+      unsubCats = onSnapshot(catRef, async (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          categories = {
+            games: Array.isArray(data.games) && data.games.length ? data.games : [...DEFAULT_GAMES],
+            types: Array.isArray(data.types) && data.types.length ? data.types : [...DEFAULT_TYPES]
+          };
+          saveLocalData();
+          populateCategorySelects();
+          renderCategoriesManager();
+          renderVouchers();
+        } else {
+          await setDoc(catRef, categories);
+        }
+      });
+
+      const colRef = collection(db, "users", uid, "vouchers");
+      unsubVouchers = onSnapshot(colRef, (snap) => {
+        vouchers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        saveLocalData();
+        setSyncState("ok", "Синхронизировано");
+        updateStats();
+        renderVouchers();
+      }, () => {
+        setSyncState("warn", "Ошибка облака");
+      });
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      renderAuthUI(user);
+      if (user) {
+        subscribeCloud(user.uid);
+      } else {
+        if (unsubVouchers) unsubVouchers();
+        if (unsubCats) unsubCats();
+        setSyncState("warn", "Локально (войдите для синка)");
+        updateStats();
+        renderVouchers();
+      }
+    });
+
+    function populateCategorySelects() {
+      const prevFilterGame = filterGame.value;
+      const prevFilterType = filterType.value;
+      const prevFormGame = voucherGame.value;
+      const prevFormType = voucherType.value;
+
+      filterGame.innerHTML = `<option value="ALL">Все игры</option>` +
+        categories.games.map(g => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join("");
+
+      filterType.innerHTML = `<option value="ALL">Все типы наград</option>` +
+        categories.types.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+
+      voucherGame.innerHTML = categories.games.map(g => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join("");
+      voucherType.innerHTML = categories.types.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+
+      if ([...filterGame.options].some(o => o.value === prevFilterGame)) filterGame.value = prevFilterGame;
+      if ([...filterType.options].some(o => o.value === prevFilterType)) filterType.value = prevFilterType;
+      if ([...voucherGame.options].some(o => o.value === prevFormGame)) voucherGame.value = prevFormGame;
+      if ([...voucherType.options].some(o => o.value === prevFormType)) voucherType.value = prevFormType;
+    }
+
+    function renderCategoriesManager() {
+      gamesList.innerHTML = categories.games.map(g => `
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-medium text-slate-200">
+          ${escapeHtml(g)}
+          <button type="button" data-remove-game="${escapeHtml(g)}" class="text-slate-400 hover:text-rose-400">×</button>
+        </span>
+      `).join("");
+
+      typesList.innerHTML = categories.types.map(t => `
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-medium text-slate-200">
+          ${escapeHtml(t)}
+          <button type="button" data-remove-type="${escapeHtml(t)}" class="text-slate-400 hover:text-rose-400">×</button>
+        </span>
+      `).join("");
+    }
+
+    async function saveCategories() {
+      saveLocalData();
+      populateCategorySelects();
+      renderCategoriesManager();
+      renderVouchers();
+      if (currentUser) {
+        await setDoc(doc(db, "users", currentUser.uid, "settings", "categories"), categories);
+      }
+    }
+
+    document.getElementById("addGameBtn").addEventListener("click", async () => {
+      const val = newGameInput.value.trim();
+      if (!val || categories.games.includes(val)) return;
+      categories.games.push(val);
+      newGameInput.value = "";
+      await saveCategories();
+      showToast("Игра добавлена");
+    });
+
+    document.getElementById("addTypeBtn").addEventListener("click", async () => {
+      const val = newTypeInput.value.trim();
+      if (!val || categories.types.includes(val)) return;
+      categories.types.push(val);
+      newTypeInput.value = "";
+      await saveCategories();
+      showToast("Тип награды добавлен");
+    });
+
+    gamesList.addEventListener("click", async (e) => {
+      const game = e.target.getAttribute("data-remove-game");
+      if (!game || categories.games.length <= 1) return;
+      categories.games = categories.games.filter(g => g !== game);
+      await saveCategories();
+    });
+
+    typesList.addEventListener("click", async (e) => {
+      const type = e.target.getAttribute("data-remove-type");
+      if (!type || categories.types.length <= 1) return;
+      categories.types = categories.types.filter(t => t !== type);
+      await saveCategories();
+    });
+
+    function getEffectiveStatus(v) {
+      if (v.status === "GIVEN") return "GIVEN";
+      const exp = new Date(v.expiresAt).getTime();
+      if (isNaN(exp) || exp <= Date.now()) return "EXPIRED";
+      return "ACTIVE";
+    }
+
+    function isExpiringSoon(v) {
+      if (getEffectiveStatus(v) !== "ACTIVE") return false;
+      const diff = new Date(v.expiresAt).getTime() - Date.now();
+      return diff > 0 && diff <= 3 * 24 * 60 * 60 * 1000;
+    }
+
+    function formatCountdown(expiresAt) {
+      const diff = new Date(expiresAt).getTime() - Date.now();
+      if (isNaN(diff) || diff <= 0) return { label: "Срок истёк", level: "expired" };
+      const totalMins = Math.floor(diff / 60000);
+      const days = Math.floor(totalMins / (60 * 24));
+      const hours = Math.floor((totalMins % (60 * 24)) / 60);
+      const mins = totalMins % 60;
+
+      let parts = [];
+      if (days > 0) parts.push(`${days} дн.`);
+      if (hours > 0) parts.push(`${hours} ч.`);
+      if (days === 0) parts.push(`${mins} мин.`);
+
+      const level = diff <= 24 * 60 * 60 * 1000 ? "urgent" : diff <= 3 * 24 * 60 * 60 * 1000 ? "soon" : "ok";
+      return { label: `Осталось: ${parts.join(" ")}`, level };
+    }
+
+    function formatDateReadable(iso) {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "—";
+      return d.toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function updateStats() {
+      document.getElementById("statTotal").textContent = vouchers.length;
+      document.getElementById("statActive").textContent = vouchers.filter(v => getEffectiveStatus(v) === "ACTIVE").length;
+      document.getElementById("statGiven").textContent = vouchers.filter(v => getEffectiveStatus(v) === "GIVEN").length;
+      document.getElementById("statExpiring").textContent = vouchers.filter(isExpiringSoon).length;
+    }
+
+    function renderVouchers() {
+      const q = searchInput.value.trim().toLowerCase();
+      const gFilter = filterGame.value;
+      const tFilter = filterType.value;
+      const sortMode = sortSelect.value;
+
+      let list = vouchers.filter(v => {
+        const eff = getEffectiveStatus(v);
+        if (currentStatusFilter === "ACTIVE" && eff !== "ACTIVE") return false;
+        if (currentStatusFilter === "GIVEN" && eff !== "GIVEN") return false;
+        if (currentStatusFilter === "EXPIRED" && eff !== "EXPIRED") return false;
+        if (currentStatusFilter === "EXPIRING" && !isExpiringSoon(v)) return false;
+
+        if (gFilter !== "ALL" && v.game !== gFilter) return false;
+        if (tFilter !== "ALL" && v.type !== tFilter) return false;
+
+        if (q) {
+          const hay = `${v.title || ""} ${v.note || ""} ${v.url || ""} ${v.game || ""} ${v.type || ""}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      list.sort((a, b) => {
+        const ea = new Date(a.expiresAt).getTime() || 0;
+        const eb = new Date(b.expiresAt).getTime() || 0;
+        if (sortMode === "expiryAsc") return ea - eb;
+        if (sortMode === "expiryDesc") return eb - ea;
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+
+      shownCount.textContent = `Показано: ${list.length} из ${vouchers.length}`;
+
+      if (list.length === 0) {
+        vouchersGrid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      vouchersGrid.innerHTML = list.map(v => {
+        const eff = getEffectiveStatus(v);
+        const cd = formatCountdown(v.expiresAt);
+        const statusBadge = eff === "GIVEN"
+          ? `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-500/15 text-purple-300 border border-purple-500/30">Отдан</span>`
+          : eff === "EXPIRED"
+          ? `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">Истёк</span>`
+          : `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Активен</span>`;
+
+        const timerColor = cd.level === "expired"
+          ? "text-rose-400"
+          : cd.level === "urgent"
+          ? "text-rose-400 font-semibold"
+          : cd.level === "soon"
+          ? "text-amber-400 font-semibold"
+          : "text-slate-300";
+
+        return `
+          <article class="bg-card hover:bg-cardHover border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col justify-between transition shadow-lg shadow-black/20">
+            <div>
+              ${v.image ? `
+                <div class="w-full h-44 bg-[#0b0f19] border-b border-slate-800/70 overflow-hidden flex items-center justify-center">
+                  <img src="${v.image}" alt="${escapeHtml(v.title)}" class="w-full h-full object-contain" />
+                </div>
+              ` : `
+                <div class="w-full h-24 bg-gradient-to-r from-slate-900 via-[#121929] to-slate-900 border-b border-slate-800/70 flex items-center justify-center text-xs text-slate-500">
+                  Без изображения
+                </div>
+              `}
+
+              <div class="p-4 space-y-3">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/25">${escapeHtml(v.game || "Brawl Stars")}</span>
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">${escapeHtml(v.type || "Награда")}</span>
+                  </div>
+                  ${statusBadge}
+                </div>
+
+                <h3 class="text-base font-bold text-white leading-snug">${escapeHtml(v.title)}</h3>
+
+                <!-- Copy Link -->
+                <div class="flex items-center gap-2 bg-[#0b0f19] border border-slate-800 rounded-xl px-3 py-2">
+                  <span class="text-xs text-slate-400 truncate flex-1 select-all">${escapeHtml(v.url)}</span>
+                  <button type="button" data-copy="${escapeAttr(v.url)}" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/35 text-blue-300 text-xs font-semibold shrink-0 transition">
+                    Копировать
+                  </button>
+                </div>
+
+                <!-- Note -->
+                <div>
+                  <input type="text" data-note-id="${v.id}" value="${escapeAttr(v.note || "")}" placeholder="Заметка: кому отдал и за что..."
+                    class="note-input w-full bg-[#0b0f19]/80 border border-slate-800/90 focus:border-blue-500 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none transition" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Expiry & Actions -->
+            <div class="px-4 py-3 bg-[#0e1420] border-t border-slate-800/80 space-y-2.5">
+              <div class="flex items-center justify-between text-xs gap-2">
+                <span class="text-slate-400">До: <span class="text-slate-300">${formatDateReadable(v.expiresAt)}</span></span>
+                <span class="${timerColor}">${cd.label}</span>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 pt-0.5">
+                <button type="button" data-toggle-given="${v.id}" class="px-2.5 py-1.5 rounded-lg text-xs font-medium ${eff === "GIVEN" ? "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25" : "bg-purple-500/15 text-purple-300 hover:bg-purple-500/25"} transition">
+                  ${eff === "GIVEN" ? "Вернуть в активные" : "Отметить отданным"}
                 </button>
+
+                <div class="flex items-center gap-1">
+                  <button type="button" data-edit="${v.id}" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Редактировать">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button type="button" data-delete="${v.id}" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition" title="Удалить">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
+          </article>
+        `;
+      }).join("");
+    }
 
-            <!-- Форма -->
-            <form id="voucher-form" onsubmit="saveVoucher(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto">
-                <input type="hidden" id="edit-voucher-id">
-
-                <!-- Зона загрузки / вставки картинки (Ctrl+V или файл) -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Изображение награды</label>
-                        <span class="text-[11px] text-blue-400 flex items-center gap-1">
-                            <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-[10px] font-mono">Ctrl+V</kbd> на ПК или файл с телефона
-                        </span>
-                    </div>
-
-                    <div id="image-dropzone" class="relative border-2 border-dashed border-sc-border hover:border-blue-500/60 rounded-2xl bg-[#0b0e14] p-4 transition flex flex-col items-center justify-center text-center cursor-pointer group min-h-[150px]" onclick="document.getElementById('image-file-input').click()">
-                        <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-                        
-                        <!-- Превью картинки -->
-                        <div id="image-preview-wrapper" class="hidden relative w-full flex flex-col items-center">
-                            <img id="image-preview" src="" alt="Превью награды" class="max-h-40 rounded-xl object-contain shadow-lg border border-white/10">
-                            <div class="flex items-center gap-2 mt-3">
-                                <button type="button" onclick="event.stopPropagation(); document.getElementById('image-file-input').click()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-white transition">
-                                    Заменить
-                                </button>
-                                <button type="button" onclick="event.stopPropagation(); clearSelectedImage()" class="px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-xs font-medium text-red-400 transition">
-                                    Удалить фото
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Заглушка до загрузки -->
-                        <div id="image-placeholder" class="flex flex-col items-center py-2">
-                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-105 transition mb-2.5">
-                                <i data-lucide="image-plus" class="w-6 h-6"></i>
-                            </div>
-                            <p class="text-sm font-medium text-slate-200">Нажмите для выбора фото или вставьте скриншот (<span class="text-blue-400">Ctrl+V</span>)</p>
-                            <p class="text-xs text-slate-500 mt-1">Автоматически сожмется для быстрой синхронизации</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ссылка на ваучер -->
-                <div>
-                    <label for="voucher-url" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Ссылка на ваучер <span class="text-red-400">*</span></label>
-                    <div class="relative flex items-center">
-                        <i data-lucide="link" class="w-4 h-4 text-slate-400 absolute left-3.5"></i>
-                        <input type="url" id="voucher-url" required placeholder="https://link.brawlstars.com/voucher/..." class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl pl-10 pr-20 py-2.5 text-sm text-white placeholder-slate-500 outline-none">
-                        <button type="button" onclick="pasteUrlFromClipboard()" class="absolute right-2 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition">
-                            Вставить
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Название награды -->
-                <div>
-                    <label for="voucher-title" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Название награды <span class="text-red-400">*</span></label>
-                    <input type="text" id="voucher-title" required placeholder="Например: Скин Меха Мортис, Пин Клоун, 10 Стар Дропов" class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none">
-                </div>
-
-                <!-- Игра и Тип награды -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                        <label for="voucher-game" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Игра Supercell</label>
-                        <select id="voucher-game" class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
-                        </select>
-                    </div>
-                    <div>
-                        <label for="voucher-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Тип награды</label>
-                        <select id="voucher-type" class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Срок действия + Быстрые кнопки -->
-                <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                        <label for="voucher-expires" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Срок действия до <span class="text-red-400">*</span></label>
-                        <div class="flex items-center gap-1">
-                            <button type="button" onclick="addDaysToExpiry(7)" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 transition">+7 дн.</button>
-                            <button type="button" onclick="addDaysToExpiry(14)" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 transition">+14 дн.</button>
-                            <button type="button" onclick="addDaysToExpiry(30)" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 transition">+30 дн.</button>
-                            <button type="button" onclick="addDaysToExpiry(90)" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 transition">+90 дн.</button>
-                        </div>
-                    </div>
-                    <input type="datetime-local" id="voucher-expires" required class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none [color-scheme:dark]">
-                </div>
-
-                <!-- Статус и Заметка -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div>
-                        <label for="voucher-status" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Статус</label>
-                        <select id="voucher-status" class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
-                            <option value="active">Активен</option>
-                            <option value="given">Отдан</option>
-                            <option value="expired">Истёк</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="voucher-note" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Заметка (кому и за что отдал)</label>
-                        <input type="text" id="voucher-note" placeholder="Например: Отдал @winner за розыгрыш в ТГ" class="w-full bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none">
-                    </div>
-                </div>
-
-                <!-- Кнопки сохранения -->
-                <div class="pt-3 border-t border-sc-border flex items-center justify-end gap-3">
-                    <button type="button" onclick="closeVoucherModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-300 transition">
-                        Отмена
-                    </button>
-                    <button type="submit" id="save-voucher-btn" class="btn-supercell px-6 py-2.5 rounded-xl font-display font-bold text-sm text-white flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i>
-                        Сохранить ваучер
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- МОДАЛЬНОЕ ОКНО: Управление категориями (Игры и Типы наград) -->
-    <div id="categories-modal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div class="bg-[#131823] border border-sc-border rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-sc-border flex items-center justify-between bg-[#161c29]">
-                <h2 class="font-display font-bold text-lg text-white flex items-center gap-2">
-                    <i data-lucide="folder-cog" class="w-5 h-5 text-amber-400"></i>
-                    Категории и игры
-                </h2>
-                <button onclick="closeCategoriesModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                <!-- Типы наград -->
-                <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Типы наград</h3>
-                    <div class="flex gap-2 mb-3">
-                        <input type="text" id="new-type-input" placeholder="Новый тип (например: Монеты, Эмодзи)..." class="flex-1 bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" onkeydown="if(event.key==='Enter'){event.preventDefault(); addCustomType();}">
-                        <button type="button" onclick="addCustomType()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition shrink-0">
-                            Добавить
-                        </button>
-                    </div>
-                    <div id="types-list-container" class="flex flex-wrap gap-2">
-                        <!-- Список типов -->
-                    </div>
-                </div>
-
-                <hr class="border-sc-border">
-
-                <!-- Игры Supercell -->
-                <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Игры</h3>
-                    <div class="flex gap-2 mb-3">
-                        <input type="text" id="new-game-input" placeholder="Добавить игру..." class="flex-1 bg-[#0b0e14] border border-sc-border focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none" onkeydown="if(event.key==='Enter'){event.preventDefault(); addCustomGame();}">
-                        <button type="button" onclick="addCustomGame()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-semibold transition shrink-0">
-                            Добавить
-                        </button>
-                    </div>
-                    <div id="games-list-container" class="flex flex-wrap gap-2">
-                        <!-- Список игр -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- МОДАЛЬНОЕ ОКНО: Подтверждение удаления (вместо confirm()) -->
-    <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div class="bg-[#131823] border border-sc-border rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-            <div class="w-12 h-12 rounded-2xl bg-red-500/15 text-red-400 flex items-center justify-center mx-auto mb-3">
-                <i data-lucide="trash-2" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-display font-bold text-lg text-white">Удалить ваучер?</h3>
-            <p id="confirm-modal-text" class="text-sm text-slate-400 mt-1 mb-5">Это действие нельзя отменить. Ваучер исчезнет со всех синхронизированных устройств.</p>
-            <div class="flex items-center justify-center gap-3">
-                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-300 transition">Отмена</button>
-                <button id="confirm-delete-btn" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-sm font-semibold text-white transition">Удалить</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK & Логика приложения -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInAnonymously, 
-            signInWithCustomToken, 
-            GoogleAuthProvider, 
-            signInWithPopup, 
-            signOut, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            addDoc, 
-            updateDoc, 
-            deleteDoc, 
-            onSnapshot, 
-            collection 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // ==========================================
-        // 1. КОНФИГУРАЦИЯ И ГЛОБАЛЬНОЕ СОСТОЯНИЕ
-        // ==========================================
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'supercell-creator-vault';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-
-        let app, auth, db;
-        let currentUser = null;
-        let unsubscribeVouchers = null;
-        let unsubscribeSettings = null;
-
-        // Базовые списки по умолчанию
-        const DEFAULT_GAMES = [
-            "Brawl Stars",
-            "Clash Royale",
-            "Clash of Clans",
-            "Squad Busters",
-            "Hay Day",
-            "Boom Beach"
-        ];
-
-        const DEFAULT_TYPES = [
-            "Пин",
-            "Спрей",
-            "Иконка",
-            "Скин",
-            "БП",
-            "Стар дропы"
-        ];
-
-        // Состояние данных
-        let vouchers = [];
-        let gamesList = [...DEFAULT_GAMES];
-        let typesList = [...DEFAULT_TYPES];
-        let currentStatusFilter = 'all';
-        let currentImageBase64 = '';
-        let voucherToDeleteId = null;
-
-        // ==========================================
-        // 2. ИНИЦИАЛИЗАЦИЯ FIREBASE И АВТОРИЗАЦИЯ
-        // ==========================================
-        async function initApp() {
-            lucide.createIcons();
-            populateCategorySelects();
-
-            if (!firebaseConfig) {
-                updateSyncStatus('error', 'Ошибка конфигурации облака');
-                return;
-            }
-
-            try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                // Слушатель изменения состояния авторизации
-                onAuthStateChanged(auth, (user) => {
-                    currentUser = user;
-                    updateAuthUI(user);
-                    if (user) {
-                        subscribeToUserData(user.uid);
-                    } else {
-                        vouchers = [];
-                        renderVouchers();
-                    }
-                });
-
-                // Первичная аутентификация (согласно правилам платформы)
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Ошибка инициализации:", error);
-                updateSyncStatus('error', 'Ошибка подключения');
-                showToast('Не удалось подключиться к облачной базе', 'error');
-            }
-
-            // Запуск таймера обновления счетчиков каждую минуту
-            setInterval(() => {
-                updateLiveCountdowns();
-            }, 30000);
-        }
-
-        // Вход через Google (для синхронизации между ПК и телефоном)
-        window.handleGoogleSignIn = async function() {
-            if (!auth) return;
-            try {
-                const provider = new GoogleAuthProvider();
-                await signInWithPopup(auth, provider);
-                showToast('Вы успешно вошли! Данные синхронизированы.', 'success');
-            } catch (error) {
-                console.error("Ошибка Google Sign-In:", error);
-                if (error.code === 'auth/popup-blocked') {
-                    showToast('Браузер заблокировал всплывающее окно входа', 'error');
-                } else if (error.code !== 'auth/popup-closed-by-user') {
-                    showToast('Не удалось выполнить вход через Google: ' + error.message, 'error');
-                }
-            }
+    // Image compression helper
+    function compressImage(fileOrBlob, maxWidth = 900, quality = 0.78) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const scale = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          };
+          img.src = ev.target.result;
         };
+        reader.readAsDataURL(fileOrBlob);
+      });
+    }
 
-        // Выход из аккаунта (возврат в гостевую сессию)
-        window.handleSignOut = async function() {
-            if (!auth) return;
-            try {
-                await signOut(auth);
-                await signInAnonymously(auth);
-                showToast('Вы вышли из аккаунта Google', 'info');
-            } catch (error) {
-                console.error("Ошибка выхода:", error);
-            }
-        };
+    function setModalImage(dataUrl) {
+      currentImageData = dataUrl || "";
+      if (currentImageData) {
+        imagePreview.src = currentImageData;
+        imagePreview.classList.remove("hidden");
+        imagePlaceholder.classList.add("hidden");
+        clearImageBtn.classList.remove("hidden");
+      } else {
+        imagePreview.src = "";
+        imagePreview.classList.add("hidden");
+        imagePlaceholder.classList.remove("hidden");
+        clearImageBtn.classList.add("hidden");
+      }
+    }
 
-        function updateAuthUI(user) {
-            const loginBtn = document.getElementById('btn-google-login');
-            const profileBadge = document.getElementById('user-profile-badge');
-            const guestBanner = document.getElementById('guest-sync-banner');
+    function toDatetimeLocalValue(isoOrMs) {
+      const d = isoOrMs ? new Date(isoOrMs) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      if (isNaN(d.getTime())) return "";
+      const pad = n => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
 
-            if (user && !user.isAnonymous) {
-                loginBtn.classList.add('hidden');
-                profileBadge.classList.remove('hidden');
-                profileBadge.classList.add('flex');
-                guestBanner.classList.add('hidden');
+    function openVoucherModal(existing = null, prefillImage = "") {
+      if (existing) {
+        modalTitle.textContent = "Редактировать ваучер";
+        editVoucherId.value = existing.id;
+        voucherTitle.value = existing.title || "";
+        voucherUrl.value = existing.url || "";
+        voucherGame.value = existing.game || categories.games[0] || "";
+        voucherType.value = existing.type || categories.types[0] || "";
+        voucherExpiry.value = toDatetimeLocalValue(existing.expiresAt);
+        voucherStatus.value = existing.status === "GIVEN" ? "GIVEN" : "ACTIVE";
+        voucherNote.value = existing.note || "";
+        setModalImage(existing.image || "");
+      } else {
+        modalTitle.textContent = "Новый ваучер";
+        editVoucherId.value = "";
+        voucherForm.reset();
+        voucherGame.value = categories.games[0] || "";
+        voucherType.value = categories.types[0] || "";
+        voucherExpiry.value = toDatetimeLocalValue();
+        voucherStatus.value = "ACTIVE";
+        setModalImage(prefillImage || "");
+      }
+      voucherModal.classList.remove("hidden");
+      voucherModal.classList.add("flex");
+    }
 
-                document.getElementById('user-name').textContent = user.displayName || user.email || 'Креатор';
-                const avatar = document.getElementById('user-avatar');
-                avatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'SC')}&background=2563eb&color=fff`;
-                updateSyncStatus('synced', 'Облако синхронизировано');
-            } else {
-                loginBtn.classList.remove('hidden');
-                profileBadge.classList.add('hidden');
-                profileBadge.classList.remove('flex');
-                guestBanner.classList.remove('hidden');
-                updateSyncStatus('guest', 'Локальная облачная сессия');
-            }
-        }
+    function closeVoucherModal() {
+      voucherModal.classList.add("hidden");
+      voucherModal.classList.remove("flex");
+    }
 
-        function updateSyncStatus(state, text) {
-            const dot = document.getElementById('sync-dot');
-            const label = document.getElementById('sync-status-text');
-            label.textContent = text;
+    document.getElementById("openAddBtn").addEventListener("click", () => openVoucherModal());
+    document.getElementById("closeVoucherModal").addEventListener("click", closeVoucherModal);
+    document.getElementById("cancelVoucherBtn").addEventListener("click", closeVoucherModal);
 
-            dot.className = 'w-2 h-2 rounded-full ';
-            if (state === 'synced') dot.className += 'bg-emerald-400';
-            else if (state === 'guest') dot.className += 'bg-blue-400';
-            else if (state === 'syncing') dot.className += 'bg-amber-400 animate-ping';
-            else dot.className += 'bg-red-500';
-        }
+    document.getElementById("openCategoriesBtn").addEventListener("click", () => {
+      renderCategoriesManager();
+      categoriesModal.classList.remove("hidden");
+      categoriesModal.classList.add("flex");
+    });
+    document.getElementById("closeCategoriesModal").addEventListener("click", () => {
+      categoriesModal.classList.add("hidden");
+      categoriesModal.classList.remove("flex");
+    });
 
-        // ==========================================
-        // 3. РАБОТА С FIRESTORE (В РЕАЛЬНОМ ВРЕМЕНИ)
-        // ==========================================
-        function subscribeToUserData(userId) {
-            if (unsubscribeVouchers) unsubscribeVouchers();
-            if (unsubscribeSettings) unsubscribeSettings();
+    imageDropZone.addEventListener("click", (e) => {
+      if (e.target === clearImageBtn) return;
+      imageFileInput.click();
+    });
 
-            updateSyncStatus('syncing', 'Загрузка данных...');
+    imageFileInput.addEventListener("change", async () => {
+      const file = imageFileInput.files?.[0];
+      if (!file) return;
+      const compressed = await compressImage(file);
+      setModalImage(compressed);
+    });
 
-            // 1. Подписка на ваучеры пользователя
-            const vouchersCol = collection(db, 'artifacts', appId, 'users', userId, 'vouchers');
-            unsubscribeVouchers = onSnapshot(vouchersCol, (snapshot) => {
-                vouchers = snapshot.docs.map(docSnap => ({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                }));
-                updateSyncStatus(currentUser?.isAnonymous ? 'guest' : 'synced', currentUser?.isAnonymous ? 'Гостевая сессия (синхр. по аккаунту)' : 'Синхронизировано');
-                renderVouchers();
-            }, (error) => {
-                console.error("Ошибка чтения ваучеров:", error);
-                updateSyncStatus('error', 'Ошибка синхронизации');
-            });
+    clearImageBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      imageFileInput.value = "";
+      setModalImage("");
+    });
 
-            // 2. Подписка на кастомные категории (игры и типы наград)
-            const settingsDoc = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'categories');
-            unsubscribeSettings = onSnapshot(settingsDoc, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    gamesList = Array.isArray(data.games) && data.games.length > 0 ? data.games : [...DEFAULT_GAMES];
-                    typesList = Array.isArray(data.types) && data.types.length > 0 ? data.types : [...DEFAULT_TYPES];
-                } else {
-                    gamesList = [...DEFAULT_GAMES];
-                    typesList = [...DEFAULT_TYPES];
-                }
-                populateCategorySelects();
-                renderCategoriesManager();
-            }, (error) => {
-                console.error("Ошибка чтения настроек:", error);
-            });
-        }
-
-        async function saveCategoriesToCloud() {
-            if (!currentUser || !db) return;
-            try {
-                const settingsDoc = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'settings', 'categories');
-                await setDoc(settingsDoc, {
-                    games: gamesList,
-                    types: typesList,
-                    updatedAt: Date.now()
-                });
-            } catch (error) {
-                console.error("Ошибка сохранения категорий:", error);
-                showToast('Не удалось сохранить категории', 'error');
-            }
-        }
-
-        // ==========================================
-        // 4. СЖАТИЕ ИЗОБРАЖЕНИЙ И ПОДДЕРЖКА CTRL+V
-        // ==========================================
-        // Сжимаем картинку через Canvas до max 420px (WebP/JPEG), чтобы база летала
-        function compressImageFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const MAX_SIZE = 420;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > MAX_SIZE) {
-                                height = Math.round((height * MAX_SIZE) / width);
-                                width = MAX_SIZE;
-                            }
-                        } else {
-                            if (height > MAX_SIZE) {
-                                width = Math.round((width * MAX_SIZE) / height);
-                                height = MAX_SIZE;
-                            }
-                        }
-
-                        const canvas = document.createElement('canvas');
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Используем WebP для сохранения прозрачности (актуально для пинов/спреев) с малым весом
-                        let dataUrl = canvas.toDataURL('image/webp', 0.82);
-                        if (dataUrl.length > 350000) {
-                            dataUrl = canvas.toDataURL('image/jpeg', 0.78);
-                        }
-                        resolve(dataUrl);
-                    };
-                    img.onerror = reject;
-                    img.src = event.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        window.handleFileSelect = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            await processAndSetImage(file);
-        };
-
-        async function processAndSetImage(file) {
-            if (!file.type.startsWith('image/')) {
-                showToast('Пожалуйста, выберите изображение', 'error');
-                return;
-            }
-            try {
-                const compressedBase64 = await compressImageFile(file);
-                setPreviewImage(compressedBase64);
-                showToast('Картинка успешно добавлена!', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('Ошибка обработки изображения', 'error');
-            }
-        }
-
-        function setPreviewImage(base64Str) {
-            currentImageBase64 = base64Str;
-            const previewImg = document.getElementById('image-preview');
-            const previewWrapper = document.getElementById('image-preview-wrapper');
-            const placeholder = document.getElementById('image-placeholder');
-            const dropzone = document.getElementById('image-dropzone');
-
-            if (base64Str) {
-                previewImg.src = base64Str;
-                previewWrapper.classList.remove('hidden');
-                placeholder.classList.add('hidden');
-                dropzone.classList.add('paste-active');
-                setTimeout(() => dropzone.classList.remove('paste-active'), 1500);
-            } else {
-                previewImg.src = '';
-                previewWrapper.classList.add('hidden');
-                placeholder.classList.remove('hidden');
-            }
-        }
-
-        window.clearSelectedImage = function() {
-            currentImageBase64 = '';
-            document.getElementById('image-file-input').value = '';
-            setPreviewImage('');
-        };
-
-        // Глобальный перехватчик Ctrl+V для вставки скриншотов из буфера обмена
-        document.addEventListener('paste', async (event) => {
-            const items = (event.clipboardData || window.clipboardData)?.items;
-            if (!items) return;
-
-            for (let i = 0; i < items.length; i++) {
-                if (items[i].type.indexOf('image') !== -1) {
-                    event.preventDefault();
-                    const blob = items[i].getAsFile();
-                    
-                    // Если модалка закрыта — открываем её для нового ваучера автоматически!
-                    const modal = document.getElementById('voucher-modal');
-                    if (modal.classList.contains('hidden')) {
-                        openVoucherModal();
-                    }
-                    
-                    await processAndSetImage(blob);
-                    break;
-                }
-            }
-        });
-
-        // Поддержка Drag & Drop в зону картинки
-        const dropzoneEl = document.getElementById('image-dropzone');
-        dropzoneEl.addEventListener('dragover', (e) => {
+    // Global Ctrl+V paste support
+    window.addEventListener("paste", async (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type && item.type.startsWith("image/")) {
+          const blob = item.getAsFile();
+          if (blob) {
             e.preventDefault();
-            dropzoneEl.classList.add('border-blue-500', 'bg-blue-500/5');
-        });
-        dropzoneEl.addEventListener('dragleave', () => {
-            dropzoneEl.classList.remove('border-blue-500', 'bg-blue-500/5');
-        });
-        dropzoneEl.addEventListener('drop', async (e) => {
-            e.preventDefault();
-            dropzoneEl.classList.remove('border-blue-500', 'bg-blue-500/5');
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                await processAndSetImage(e.dataTransfer.files[0]);
-            }
-        });
-
-        // ==========================================
-        // 5. УПРАВЛЕНИЕ ВАУЧЕРАМИ (CRUD)
-        // ==========================================
-        window.openVoucherModal = function(voucherId = null) {
-            const modal = document.getElementById('voucher-modal');
-            const titleEl = document.getElementById('modal-title');
-            const form = document.getElementById('voucher-form');
-            form.reset();
-            clearSelectedImage();
-            populateCategorySelects();
-
-            if (voucherId) {
-                const v = vouchers.find(item => item.id === voucherId);
-                if (!v) return;
-
-                titleEl.innerHTML = `<i data-lucide="edit-3" class="w-5 h-5 text-blue-400"></i> Редактировать ваучер`;
-                document.getElementById('edit-voucher-id').value = v.id;
-                document.getElementById('voucher-url').value = v.url || '';
-                document.getElementById('voucher-title').value = v.title || '';
-                document.getElementById('voucher-game').value = v.game || gamesList[0];
-                document.getElementById('voucher-type').value = v.type || typesList[0];
-                document.getElementById('voucher-status').value = v.status || 'active';
-                document.getElementById('voucher-note').value = v.note || '';
-
-                if (v.expiresAt) {
-                    document.getElementById('voucher-expires').value = toLocalDateTimeInput(new Date(v.expiresAt));
-                }
-                if (v.image) {
-                    setPreviewImage(v.image);
-                }
+            const compressed = await compressImage(blob);
+            if (!voucherModal.classList.contains("hidden")) {
+              setModalImage(compressed);
+              showToast("Скриншот вставлен");
             } else {
-                titleEl.innerHTML = `<i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i> Новый ваучер`;
-                document.getElementById('edit-voucher-id').value = '';
-                document.getElementById('voucher-status').value = 'active';
-                // По умолчанию ставим срок +14 дней от текущего времени
-                const defaultExpiry = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-                document.getElementById('voucher-expires').value = toLocalDateTimeInput(defaultExpiry);
+              openVoucherModal(null, compressed);
+              showToast("Скриншот вставлен в новый ваучер");
             }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            lucide.createIcons();
-        };
-
-        window.closeVoucherModal = function() {
-            const modal = document.getElementById('voucher-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        };
-
-        window.addDaysToExpiry = function(days) {
-            const input = document.getElementById('voucher-expires');
-            const targetDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-            input.value = toLocalDateTimeInput(targetDate);
-        };
-
-        function toLocalDateTimeInput(date) {
-            const pad = (n) => String(n).padStart(2, '0');
-            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+          }
+          break;
         }
+      }
+    });
 
-        window.pasteUrlFromClipboard = async function() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text) {
-                    document.getElementById('voucher-url').value = text.trim();
-                    showToast('Ссылка вставлена', 'success');
-                }
-            } catch (e) {
-                showToast('Используйте Ctrl+V в поле ввода', 'info');
-            }
-        };
+    voucherForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = editVoucherId.value || ("v_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6));
+      const existing = vouchers.find(x => x.id === id);
 
-        window.saveVoucher = async function(event) {
-            event.preventDefault();
-            if (!currentUser || !db) {
-                showToast('Ожидание подключения к облаку...', 'error');
-                return;
-            }
+      const payload = {
+        id,
+        title: voucherTitle.value.trim(),
+        url: voucherUrl.value.trim(),
+        game: voucherGame.value,
+        type: voucherType.value,
+        expiresAt: new Date(voucherExpiry.value).toISOString(),
+        status: voucherStatus.value,
+        note: voucherNote.value.trim(),
+        image: currentImageData || "",
+        createdAt: existing?.createdAt || Date.now(),
+        updatedAt: Date.now()
+      };
 
-            const btn = document.getElementById('save-voucher-btn');
-            btn.disabled = true;
-            btn.classList.add('opacity-60');
-
-            const editId = document.getElementById('edit-voucher-id').value;
-            const url = document.getElementById('voucher-url').value.trim();
-            const title = document.getElementById('voucher-title').value.trim();
-            const game = document.getElementById('voucher-game').value;
-            const type = document.getElementById('voucher-type').value;
-            const expiresVal = document.getElementById('voucher-expires').value;
-            const status = document.getElementById('voucher-status').value;
-            const note = document.getElementById('voucher-note').value.trim();
-
-            const expiresAt = expiresVal ? new Date(expiresVal).getTime() : Date.now() + 7 * 86400000;
-
-            const voucherData = {
-                url,
-                title,
-                game,
-                type,
-                expiresAt,
-                status,
-                note,
-                image: currentImageBase64 || '',
-                updatedAt: Date.now()
-            };
-
-            try {
-                const vouchersCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'vouchers');
-                if (editId) {
-                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'vouchers', editId);
-                    await updateDoc(docRef, voucherData);
-                    showToast('Ваучер обновлен!', 'success');
-                } else {
-                    voucherData.createdAt = Date.now();
-                    await addDoc(vouchersCol, voucherData);
-                    showToast('Ваучер сохранен и синхронизирован!', 'success');
-                }
-                closeVoucherModal();
-            } catch (error) {
-                console.error("Ошибка сохранения:", error);
-                showToast('Ошибка при сохранении ваучера', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('opacity-60');
-            }
-        };
-
-        // Быстрое переключение статуса прямо с карточки
-        window.toggleVoucherStatus = async function(id) {
-            if (!currentUser || !db) return;
-            const v = vouchers.find(item => item.id === id);
-            if (!v) return;
-
-            const newStatus = v.status === 'given' ? 'active' : 'given';
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'vouchers', id);
-                await updateDoc(docRef, { 
-                    status: newStatus,
-                    updatedAt: Date.now()
-                });
-                showToast(newStatus === 'given' ? 'Отмечен как отданный!' : 'Возвращен в активные', 'success');
-            } catch (error) {
-                console.error("Ошибка смены статуса:", error);
-                showToast('Не удалось обновить статус', 'error');
-            }
-        };
-
-        // Быстрое сохранение заметки прямо из карточки
-        window.updateVoucherNoteInline = async function(id, newNote) {
-            if (!currentUser || !db) return;
-            const v = vouchers.find(item => item.id === id);
-            if (!v || (v.note || '') === newNote.trim()) return;
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'vouchers', id);
-                await updateDoc(docRef, { 
-                    note: newNote.trim(),
-                    updatedAt: Date.now()
-                });
-                showToast('Заметка сохранена', 'success');
-            } catch (error) {
-                console.error("Ошибка сохранения заметки:", error);
-                showToast('Не удалось сохранить заметку', 'error');
-            }
-        };
-
-        // Удаление через кастомное модальное окно
-        window.askDeleteVoucher = function(id) {
-            voucherToDeleteId = id;
-            const modal = document.getElementById('confirm-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-
-            document.getElementById('confirm-delete-btn').onclick = async () => {
-                if (!voucherToDeleteId || !currentUser || !db) return;
-                try {
-                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'vouchers', voucherToDeleteId);
-                    await deleteDoc(docRef);
-                    showToast('Ваучер удален', 'info');
-                } catch (e) {
-                    console.error(e);
-                    showToast('Ошибка удаления', 'error');
-                } finally {
-                    closeConfirmModal();
-                }
-            };
-        };
-
-        window.closeConfirmModal = function() {
-            voucherToDeleteId = null;
-            const modal = document.getElementById('confirm-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        };
-
-        // Копирование ссылки в 1 клик (с fallback через execCommand для iframe)
-        window.copyVoucherLink = function(url, btnElement) {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = url;
-            tempInput.style.position = 'fixed';
-            tempInput.style.left = '-9999px';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (err) {
-                success = false;
-            }
-            document.body.removeChild(tempInput);
-
-            if (!success && navigator.clipboard) {
-                navigator.clipboard.writeText(url).catch(() => {});
-            }
-
-            showToast('Ссылка скопирована в буфер!', 'success');
-
-            if (btnElement) {
-                const originalHTML = btnElement.innerHTML;
-                btnElement.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Скопировано!`;
-                btnElement.classList.remove('btn-supercell');
-                btnElement.classList.add('bg-emerald-600', 'text-white');
-                lucide.createIcons();
-                setTimeout(() => {
-                    btnElement.innerHTML = originalHTML;
-                    btnElement.classList.add('btn-supercell');
-                    btnElement.classList.remove('bg-emerald-600');
-                    lucide.createIcons();
-                }, 1600);
-            }
-        };
-
-        // ==========================================
-        // 6. УПРАВЛЕНИЕ КАТЕГОРИЯМИ И ИГРАМИ
-        // ==========================================
-        function populateCategorySelects() {
-            const filterGame = document.getElementById('filter-game');
-            const filterType = document.getElementById('filter-type');
-            const formGame = document.getElementById('voucher-game');
-            const formType = document.getElementById('voucher-type');
-
-            const prevFilterGame = filterGame.value;
-            const prevFilterType = filterType.value;
-
-            filterGame.innerHTML = `<option value="all">Все игры</option>` + 
-                gamesList.map(g => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('');
-            
-            filterType.innerHTML = `<option value="all">Все типы наград</option>` + 
-                typesList.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-
-            if (gamesList.includes(prevFilterGame)) filterGame.value = prevFilterGame;
-            if (typesList.includes(prevFilterType)) filterType.value = prevFilterType;
-
-            formGame.innerHTML = gamesList.map(g => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('');
-            formType.innerHTML = typesList.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+      if (currentUser) {
+        setSyncState("sync", "Сохранение...");
+        await setDoc(doc(db, "users", currentUser.uid, "vouchers", id), payload);
+      } else {
+        if (existing) {
+          vouchers = vouchers.map(x => x.id === id ? payload : x);
+        } else {
+          vouchers.unshift(payload);
         }
+        saveLocalData();
+        updateStats();
+        renderVouchers();
+      }
 
-        window.openCategoriesModal = function() {
-            renderCategoriesManager();
-            const modal = document.getElementById('categories-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        };
+      closeVoucherModal();
+      showToast("Ваучер сохранён");
+    });
 
-        window.closeCategoriesModal = function() {
-            const modal = document.getElementById('categories-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        };
-
-        function renderCategoriesManager() {
-            const typesContainer = document.getElementById('types-list-container');
-            const gamesContainer = document.getElementById('games-list-container');
-
-            typesContainer.innerHTML = typesList.map((t, idx) => `
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0b0e14] border border-sc-border text-xs font-medium text-slate-200">
-                    ${escapeHtml(t)}
-                    ${typesList.length > 1 ? `
-                        <button type="button" onclick="removeCustomType(${idx})" class="text-slate-500 hover:text-red-400 transition ml-0.5" title="Удалить">
-                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
-                        </button>
-                    ` : ''}
-                </span>
-            `).join('');
-
-            gamesContainer.innerHTML = gamesList.map((g, idx) => `
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0b0e14] border border-sc-border text-xs font-medium text-slate-200">
-                    ${escapeHtml(g)}
-                    ${gamesList.length > 1 ? `
-                        <button type="button" onclick="removeCustomGame(${idx})" class="text-slate-500 hover:text-red-400 transition ml-0.5" title="Удалить">
-                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
-                        </button>
-                    ` : ''}
-                </span>
-            `).join('');
-
-            lucide.createIcons();
+    // Grid actions: copy, toggle given, edit, delete, note
+    vouchersGrid.addEventListener("click", async (e) => {
+      const copyUrl = e.target.closest("[data-copy]")?.getAttribute("data-copy");
+      if (copyUrl) {
+        try {
+          await navigator.clipboard.writeText(copyUrl);
+          showToast("Ссылка скопирована");
+        } catch {
+          showToast("Не удалось скопировать");
         }
+        return;
+      }
 
-        window.addCustomType = async function() {
-            const input = document.getElementById('new-type-input');
-            const val = input.value.trim();
-            if (!val) return;
-            if (typesList.some(t => t.toLowerCase() === val.toLowerCase())) {
-                showToast('Такой тип награды уже существует', 'info');
-                return;
-            }
-            typesList.push(val);
-            input.value = '';
-            populateCategorySelects();
-            renderCategoriesManager();
-            await saveCategoriesToCloud();
-            showToast(`Тип "${val}" добавлен`, 'success');
-        };
-
-        window.removeCustomType = async function(index) {
-            if (typesList.length <= 1) return;
-            const removed = typesList.splice(index, 1)[0];
-            populateCategorySelects();
-            renderCategoriesManager();
-            await saveCategoriesToCloud();
-            showToast(`Тип "${removed}" удален`, 'info');
-        };
-
-        window.addCustomGame = async function() {
-            const input = document.getElementById('new-game-input');
-            const val = input.value.trim();
-            if (!val) return;
-            if (gamesList.some(g => g.toLowerCase() === val.toLowerCase())) {
-                showToast('Такая игра уже есть в списке', 'info');
-                return;
-            }
-            gamesList.push(val);
-            input.value = '';
-            populateCategorySelects();
-            renderCategoriesManager();
-            await saveCategoriesToCloud();
-            showToast(`Игра "${val}" добавлена`, 'success');
-        };
-
-        window.removeCustomGame = async function(index) {
-            if (gamesList.length <= 1) return;
-            const removed = gamesList.splice(index, 1)[0];
-            populateCategorySelects();
-            renderCategoriesManager();
-            await saveCategoriesToCloud();
-            showToast(`Игра "${removed}" удалена`, 'info');
-        };
-
-        // ==========================================
-        // 7. ФИЛЬТРАЦИЯ, СОРТИРОВКА И РЕНДЕР КАРТОЧЕК
-        // ==========================================
-        function getEffectiveStatus(voucher) {
-            if (voucher.status === 'given') return 'given';
-            if (voucher.status === 'expired' || (voucher.expiresAt && Date.now() > voucher.expiresAt)) {
-                return 'expired';
-            }
-            return 'active';
+      const givenId = e.target.closest("[data-toggle-given]")?.getAttribute("data-toggle-given");
+      if (givenId) {
+        const target = vouchers.find(x => x.id === givenId);
+        if (!target) return;
+        const nextStatus = target.status === "GIVEN" ? "ACTIVE" : "GIVEN";
+        if (currentUser) {
+          await updateDoc(doc(db, "users", currentUser.uid, "vouchers", givenId), { status: nextStatus, updatedAt: Date.now() });
+        } else {
+          target.status = nextStatus;
+          saveLocalData();
+          updateStats();
+          renderVouchers();
         }
+        return;
+      }
 
-        function formatRemainingTime(expiresAt, effectiveStatus) {
-            if (!expiresAt) return { text: 'Срок не указан', urgency: 'normal', dateStr: '' };
+      const editId = e.target.closest("[data-edit]")?.getAttribute("data-edit");
+      if (editId) {
+        const target = vouchers.find(x => x.id === editId);
+        if (target) openVoucherModal(target);
+        return;
+      }
 
-            const dateObj = new Date(expiresAt);
-            const dateStr = dateObj.toLocaleString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            const diff = expiresAt - Date.now();
-
-            if (diff <= 0 || effectiveStatus === 'expired') {
-                return { text: 'Срок истёк', urgency: 'expired', dateStr };
-            }
-
-            const totalMinutes = Math.floor(diff / 60000);
-            const totalHours = Math.floor(totalMinutes / 60);
-            const days = Math.floor(totalHours / 24);
-            const hours = totalHours % 24;
-            const minutes = totalMinutes % 60;
-
-            if (days >= 3) {
-                return { text: `Осталось: ${days} дн. ${hours} ч.`, urgency: 'normal', dateStr };
-            } else if (days >= 1) {
-                return { text: `Осталось: ${days} дн. ${hours} ч.`, urgency: 'warning', dateStr };
-            } else if (hours >= 1) {
-                return { text: `Осталось: ${hours} ч. ${minutes} мин.`, urgency: 'critical', dateStr };
-            } else {
-                return { text: `Осталось: ${Math.max(1, minutes)} мин.!`, urgency: 'critical', dateStr };
-            }
+      const delId = e.target.closest("[data-delete]")?.getAttribute("data-delete");
+      if (delId) {
+        if (currentUser) {
+          await deleteDoc(doc(db, "users", currentUser.uid, "vouchers", delId));
+        } else {
+          vouchers = vouchers.filter(x => x.id !== delId);
+          saveLocalData();
+          updateStats();
+          renderVouchers();
         }
+        showToast("Ваучер удалён");
+      }
+    });
 
-        window.setStatusFilter = function(status) {
-            currentStatusFilter = status;
-            document.querySelectorAll('.status-tab').forEach(btn => {
-                if (btn.dataset.status === status) {
-                    btn.className = 'status-tab active px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-blue-600 text-white shadow-sm';
-                } else {
-                    const isFire = btn.dataset.status === 'expiring_soon';
-                    btn.className = `status-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-[#0b0e14] ${isFire ? 'text-amber-400/90 hover:text-amber-300' : 'text-slate-400 hover:text-white'} border border-sc-border`;
-                }
-            });
-            renderVouchers();
-        };
+    async function saveInlineNote(inputEl) {
+      const id = inputEl.getAttribute("data-note-id");
+      const val = inputEl.value.trim();
+      const target = vouchers.find(x => x.id === id);
+      if (!target || (target.note || "") === val) return;
 
-        window.setExpiringSoonFilter = function() {
-            setStatusFilter('expiring_soon');
-        };
+      if (currentUser) {
+        await updateDoc(doc(db, "users", currentUser.uid, "vouchers", id), { note: val, updatedAt: Date.now() });
+      } else {
+        target.note = val;
+        saveLocalData();
+      }
+      showToast("Заметка сохранена");
+    }
 
-        window.clearSearch = function() {
-            document.getElementById('search-input').value = '';
-            renderVouchers();
-        };
+    vouchersGrid.addEventListener("change", (e) => {
+      if (e.target.classList.contains("note-input")) saveInlineNote(e.target);
+    });
 
-        window.resetAllFilters = function() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('filter-game').value = 'all';
-            document.getElementById('filter-type').value = 'all';
-            setStatusFilter('all');
-        };
+    vouchersGrid.addEventListener("keydown", (e) => {
+      if (e.target.classList.contains("note-input") && e.key === "Enter") {
+        e.target.blur();
+      }
+    });
 
-        window.renderVouchers = function() {
-            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
-            const gameFilter = document.getElementById('filter-game').value;
-            const typeFilter = document.getElementById('filter-type').value;
-            const sortBy = document.getElementById('sort-by').value;
-
-            document.getElementById('clear-search-btn').classList.toggle('hidden', !searchQuery);
-
-            // Подсчет статистики по всем ваучерам
-            let totalCount = vouchers.length;
-            let activeCount = 0;
-            let givenCount = 0;
-            let expiringSoonCount = 0;
-            const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
-
-            vouchers.forEach(v => {
-                const eff = getEffectiveStatus(v);
-                if (eff === 'active') {
-                    activeCount++;
-                    if (v.expiresAt && (v.expiresAt - Date.now()) <= threeDaysMs && (v.expiresAt - Date.now()) > 0) {
-                        expiringSoonCount++;
-                    }
-                } else if (eff === 'given') {
-                    givenCount++;
-                }
-            });
-
-            document.getElementById('stat-total').textContent = totalCount;
-            document.getElementById('stat-active').textContent = activeCount;
-            document.getElementById('stat-given').textContent = givenCount;
-            document.getElementById('stat-expiring').textContent = expiringSoonCount;
-
-            // Фильтрация
-            let filtered = vouchers.filter(v => {
-                const eff = getEffectiveStatus(v);
-
-                if (currentStatusFilter === 'expiring_soon') {
-                    const diff = (v.expiresAt || 0) - Date.now();
-                    if (eff !== 'active' || diff <= 0 || diff > threeDaysMs) return false;
-                } else if (currentStatusFilter !== 'all' && eff !== currentStatusFilter) {
-                    return false;
-                }
-
-                if (gameFilter !== 'all' && v.game !== gameFilter) return false;
-                if (typeFilter !== 'all' && v.type !== typeFilter) return false;
-
-                if (searchQuery) {
-                    const hay = `${v.title || ''} ${v.note || ''} ${v.url || ''} ${v.game || ''} ${v.type || ''}`.toLowerCase();
-                    if (!hay.includes(searchQuery)) return false;
-                }
-
-                return true;
-            });
-
-            // Сортировка
-            filtered.sort((a, b) => {
-                if (sortBy === 'expiring_asc') {
-                    const effA = getEffectiveStatus(a);
-                    const effB = getEffectiveStatus(b);
-                    // Активные всегда выше отданных/истекших при сортировке по сроку
-                    if (effA === 'active' && effB !== 'active') return -1;
-                    if (effA !== 'active' && effB === 'active') return 1;
-                    return (a.expiresAt || Infinity) - (b.expiresAt || Infinity);
-                } else if (sortBy === 'newest') {
-                    return (b.createdAt || 0) - (a.createdAt || 0);
-                } else if (sortBy === 'name_asc') {
-                    return (a.title || '').localeCompare(b.title || '', 'ru');
-                }
-                return 0;
-            });
-
-            // Обновление счетчика и кнопки сброса
-            document.getElementById('results-counter').textContent = `Показано: ${filtered.length} из ${totalCount}`;
-            const hasFilters = searchQuery || gameFilter !== 'all' || typeFilter !== 'all' || currentStatusFilter !== 'all';
-            document.getElementById('reset-filters-btn').classList.toggle('hidden', !hasFilters);
-
-            const grid = document.getElementById('vouchers-grid');
-            const emptyState = document.getElementById('empty-state');
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            emptyState.classList.remove('flex');
-
-            grid.innerHTML = filtered.map(v => createVoucherCardHTML(v)).join('');
-            lucide.createIcons();
-        };
-
-        function createVoucherCardHTML(v) {
-            const effStatus = getEffectiveStatus(v);
-            const timeInfo = formatRemainingTime(v.expiresAt, effStatus);
-
-            // Бейдж статуса
-            let statusBadge = '';
-            if (effStatus === 'active') {
-                statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Активен</span>`;
-            } else if (effStatus === 'given') {
-                statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30"><i data-lucide="gift" class="w-3 h-3"></i>Отдан</span>`;
-            } else {
-                statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-red-500/15 text-red-400 border border-red-500/30"><i data-lucide="clock-alert" class="w-3 h-3"></i>Истёк</span>`;
-            }
-
-            // Цвет таймера снизу
-            let timerColorClass = 'text-slate-300 bg-slate-800/70 border-slate-700/60';
-            if (effStatus === 'given') {
-                timerColorClass = 'text-slate-400 bg-slate-800/40 border-slate-800';
-            } else if (timeInfo.urgency === 'expired') {
-                timerColorClass = 'text-red-400 bg-red-500/10 border-red-500/25';
-            } else if (timeInfo.urgency === 'critical') {
-                timerColorClass = 'text-red-300 bg-red-500/20 border-red-500/40 animate-pulse';
-            } else if (timeInfo.urgency === 'warning') {
-                timerColorClass = 'text-amber-300 bg-amber-500/15 border-amber-500/30';
-            }
-
-            // Изображение или красивая игровая заглушка
-            const imageBlock = v.image ? `
-                <div class="relative h-44 w-full bg-[#0a0d13] overflow-hidden flex items-center justify-center p-3 border-b border-sc-border/70">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#131823] via-transparent to-transparent opacity-60"></div>
-                    <img src="${v.image}" alt="${escapeHtml(v.title)}" class="relative z-10 max-h-full max-w-full object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] transition duration-300 group-hover:scale-105 ${effStatus !== 'active' ? 'opacity-75 grayscale-[30%]' : ''}">
-                </div>
-            ` : `
-                <div class="relative h-44 w-full bg-gradient-to-br from-[#161e2e] to-[#0c1018] overflow-hidden flex flex-col items-center justify-center p-4 border-b border-sc-border/70">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400/70 mb-2">
-                        <i data-lucide="award" class="w-7 h-7"></i>
-                    </div>
-                    <span class="text-[11px] font-medium text-slate-500">Без изображения</span>
-                </div>
-            `;
-
-            return `
-                <article class="voucher-card group rounded-2xl overflow-hidden flex flex-col justify-between ${effStatus === 'given' ? 'opacity-85' : ''}" data-voucher-id="${v.id}">
-                    <div>
-                        <!-- Верхняя часть: Картинка + Оверлей бейджей -->
-                        <div class="relative">
-                            ${imageBlock}
-                            
-                            <!-- Бейдж игры сверху слева -->
-                            <div class="absolute top-2.5 left-2.5 z-20 flex flex-wrap gap-1.5">
-                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#0b0e14]/85 backdrop-blur-md text-amber-400 border border-amber-500/30 shadow-sm">
-                                    ${escapeHtml(v.game || 'Supercell')}
-                                </span>
-                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#0b0e14]/85 backdrop-blur-md text-blue-300 border border-blue-500/30 shadow-sm">
-                                    ${escapeHtml(v.type || 'Награда')}
-                                </span>
-                            </div>
-
-                            <!-- Кнопки редактирования/удаления сверху справа -->
-                            <div class="absolute top-2.5 right-2.5 z-20 flex items-center gap-1">
-                                <button onclick="openVoucherModal('${v.id}')" title="Редактировать" class="p-1.5 rounded-lg bg-[#0b0e14]/85 hover:bg-blue-600 text-slate-300 hover:text-white backdrop-blur-md border border-white/10 transition">
-                                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                                </button>
-                                <button onclick="askDeleteVoucher('${v.id}')" title="Удалить" class="p-1.5 rounded-lg bg-[#0b0e14]/85 hover:bg-red-600 text-slate-300 hover:text-white backdrop-blur-md border border-white/10 transition">
-                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Тело карточки -->
-                        <div class="p-4 space-y-3">
-                            <div class="flex items-start justify-between gap-2">
-                                <h3 class="font-display font-bold text-base text-white leading-snug line-clamp-2" title="${escapeHtml(v.title)}">
-                                    ${escapeHtml(v.title)}
-                                </h3>
-                                <div class="shrink-0">
-                                    ${statusBadge}
-                                </div>
-                            </div>
-
-                            <!-- Ссылка + Быстрое копирование -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="copyVoucherLink('${escapeAttr(v.url)}', this)" class="btn-supercell flex-1 py-2 px-3 rounded-xl font-semibold text-xs text-white flex items-center justify-center gap-1.5 cursor-pointer">
-                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                                    Копировать ссылку
-                                </button>
-                                <a href="${escapeAttr(v.url)}" target="_blank" rel="noopener noreferrer" title="Открыть ссылку в браузере" class="p-2 rounded-xl bg-[#0b0e14] hover:bg-slate-800 border border-sc-border text-slate-300 hover:text-white transition shrink-0">
-                                    <i data-lucide="external-link" class="w-4 h-4"></i>
-                                </a>
-                            </div>
-
-                            <!-- Поле заметки прямо в карточке (кому и за что отдал) -->
-                            <div class="relative">
-                                <div class="flex items-center gap-1.5 text-[11px] font-medium text-slate-400 mb-1">
-                                    <i data-lucide="message-square-text" class="w-3 h-3 text-slate-500"></i>
-                                    <span>Заметка (кому / за что):</span>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    value="${escapeAttr(v.note || '')}" 
-                                    placeholder="Написать кому отдал..."
-                                    onblur="updateVoucherNoteInline('${v.id}', this.value)"
-                                    onkeydown="if(event.key==='Enter'){this.blur();}"
-                                    class="w-full bg-[#0b0e14] border border-sc-border/80 focus:border-blue-500 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 outline-none transition"
-                                >
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Подвал карточки: Срок действия, обратный отсчет и быстрая смена статуса -->
-                    <div class="px-4 pb-4 pt-1 space-y-2.5">
-                        <div class="rounded-xl border px-3 py-2 flex items-center justify-between gap-2 ${timerColorClass}" data-countdown-expires="${v.expiresAt || ''}" data-countdown-status="${effStatus}">
-                            <div class="flex items-center gap-1.5 text-xs font-bold">
-                                <i data-lucide="timer" class="w-3.5 h-3.5 shrink-0"></i>
-                                <span class="countdown-label">${timeInfo.text}</span>
-                            </div>
-                            <span class="text-[10px] opacity-80 whitespace-nowrap">${timeInfo.dateStr}</span>
-                        </div>
-
-                        <button onclick="toggleVoucherStatus('${v.id}')" class="w-full py-1.5 px-3 rounded-xl text-xs font-medium border transition flex items-center justify-center gap-1.5 ${
-                            effStatus === 'given' 
-                            ? 'bg-slate-800/60 hover:bg-slate-800 border-slate-700 text-slate-300' 
-                            : 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/25 text-purple-300'
-                        }">
-                            <i data-lucide="${effStatus === 'given' ? 'rotate-ccw' : 'check-check'}" class="w-3.5 h-3.5"></i>
-                            ${effStatus === 'given' ? 'Вернуть в активные' : 'Отметить как отданный'}
-                        </button>
-                    </div>
-                </article>
-            `;
-        }
-
-        // Обновление живых таймеров без полного перерендера DOM
-        function updateLiveCountdowns() {
-            document.querySelectorAll('[data-countdown-expires]').forEach(el => {
-                const exp = Number(el.dataset.countdownExpires);
-                const status = el.dataset.countdownStatus;
-                if (!exp) return;
-                const info = formatRemainingTime(exp, status);
-                const label = el.querySelector('.countdown-label');
-                if (label) label.textContent = info.text;
-            });
-        }
-
-        // ==========================================
-        // 8. УТИЛИТЫ И УВЕДОМЛЕНИЯ (TOASTS)
-        // ==========================================
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let colors = 'bg-slate-800 border-slate-700 text-white';
-            let icon = 'info';
-            if (type === 'success') {
-                colors = 'bg-emerald-950/95 border-emerald-500/40 text-emerald-200';
-                icon = 'check-circle-2';
-            } else if (type === 'error') {
-                colors = 'bg-red-950/95 border-red-500/40 text-red-200';
-                icon = 'alert-circle';
-            }
-
-            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-md text-xs font-semibold transition-all duration-200 transform translate-y-2 opacity-0 ${colors}`;
-            toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 shrink-0"></i><span>${escapeHtml(message)}</span>`;
-            
-            container.appendChild(toast);
-            lucide.createIcons();
-
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            });
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 220);
-            }, 3000);
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function escapeAttr(str) {
-            return escapeHtml(str);
-        }
-
-        // Закрытие модалок по Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeVoucherModal();
-                closeCategoriesModal();
-                closeConfirmModal();
-            }
+    // Filter listeners
+    document.querySelectorAll(".status-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentStatusFilter = btn.getAttribute("data-status");
+        document.querySelectorAll(".status-tab").forEach(b => {
+          b.classList.remove("bg-blue-600", "text-white");
+          if (b.getAttribute("data-status") !== "EXPIRING") {
+            b.classList.add("bg-slate-800/80", "text-slate-300");
+          }
         });
+        if (currentStatusFilter !== "EXPIRING") {
+          btn.classList.remove("bg-slate-800/80", "text-slate-300");
+          btn.classList.add("bg-blue-600", "text-white");
+        }
+        renderVouchers();
+      });
+    });
 
-        // Старт приложения
-        window.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    searchInput.addEventListener("input", renderVouchers);
+    filterGame.addEventListener("change", renderVouchers);
+    filterType.addEventListener("change", renderVouchers);
+    sortSelect.addEventListener("change", renderVouchers);
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeAttr(str) {
+      return String(str || "").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    // Init
+    loadLocalData();
+    populateCategorySelects();
+    updateStats();
+    renderVouchers();
+    setInterval(() => {
+      updateStats();
+      renderVouchers();
+    }, 60000);
+  </script>
 </body>
 </html>
